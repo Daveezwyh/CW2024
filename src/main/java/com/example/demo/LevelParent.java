@@ -117,7 +117,10 @@ public abstract class LevelParent extends Observable {
 		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
 				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
+				if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT
+				){
+					user.stop();
+				}
 			}
 		});
 		root.getChildren().add(background);
@@ -252,7 +255,7 @@ public abstract class LevelParent extends Observable {
 	}
 	private void removeOffScreenProjectiles() {
 		userProjectiles.removeIf(projectile -> {
-			if (projectile.getTranslateY() < 0 || projectile.getTranslateY() > screenHeight) {
+			if (projectile.getTranslateX() > screenWidth) {
 				root.getChildren().remove(projectile);
 				return true;
 			}
@@ -260,7 +263,7 @@ public abstract class LevelParent extends Observable {
 		});
 
 		enemyProjectiles.removeIf(projectile -> {
-			if (projectile.getTranslateY() < 0 || projectile.getTranslateY() > screenHeight) {
+			if (projectile.getTranslateX() > screenWidth) {
 				root.getChildren().remove(projectile);
 				return true;
 			}
