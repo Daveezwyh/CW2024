@@ -88,6 +88,7 @@ public abstract class LevelParent extends Observable {
 		handleEnemyProjectileCollisions();
 		handlePlaneCollisions();
 		removeAllDestroyedActors();
+		removeOffScreenProjectiles();
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
@@ -249,5 +250,21 @@ public abstract class LevelParent extends Observable {
 	private void updateNumberOfEnemies() {
 		currentNumberOfEnemies = enemyUnits.size();
 	}
+	private void removeOffScreenProjectiles() {
+		userProjectiles.removeIf(projectile -> {
+			if (projectile.getTranslateY() < 0 || projectile.getTranslateY() > screenHeight) {
+				root.getChildren().remove(projectile);
+				return true;
+			}
+			return false;
+		});
 
+		enemyProjectiles.removeIf(projectile -> {
+			if (projectile.getTranslateY() < 0 || projectile.getTranslateY() > screenHeight) {
+				root.getChildren().remove(projectile);
+				return true;
+			}
+			return false;
+		});
+	}
 }
