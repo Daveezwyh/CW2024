@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.util.Duration;
-
+import javafx.scene.shape.Rectangle;
 public abstract class LevelParent extends Observable {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
@@ -129,6 +129,9 @@ public abstract class LevelParent extends Observable {
 	private void fireProjectile() {
 		ActiveActorDestructible projectile = user.fireProjectile();
 		root.getChildren().add(projectile);
+		if(projectile.isBoundingBoxVisible()){
+			root.getChildren().add(projectile.getBoundingBox());
+		}
 		userProjectiles.add(projectile);
 	}
 
@@ -139,6 +142,9 @@ public abstract class LevelParent extends Observable {
 	private void spawnEnemyProjectile(ActiveActorDestructible projectile) {
 		if (projectile != null) {
 			root.getChildren().add(projectile);
+			if(projectile.isBoundingBoxVisible()){
+				root.getChildren().add(projectile.getBoundingBox());
+			}
 			enemyProjectiles.add(projectile);
 		}
 	}
@@ -158,9 +164,18 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
-		List<ActiveActorDestructible> destroyedActors = actors.stream().filter(actor -> actor.isDestroyed())
-				.collect(Collectors.toList());
-		root.getChildren().removeAll(destroyedActors);
+		List<ActiveActorDestructible> destroyedActors = actors.stream()
+				.filter(ActiveActorDestructible::isDestroyed)
+				.toList();
+
+		for (ActiveActorDestructible actor : destroyedActors) {
+			// Assuming actor has a method to get its bounding box
+			Rectangle boundingBox = actor.getBoundingBox();
+
+			// Remove the actor and its bounding box from the root
+			root.getChildren().removeAll(actor, boundingBox);
+		}
+
 		actors.removeAll(destroyedActors);
 	}
 
@@ -236,6 +251,9 @@ public abstract class LevelParent extends Observable {
 	protected void addEnemyUnit(ActiveActorDestructible enemy) {
 		enemyUnits.add(enemy);
 		root.getChildren().add(enemy);
+		if(enemy.isBoundingBoxVisible()){
+			root.getChildren().add(enemy.getBoundingBox());
+		}
 	}
 
 	protected double getEnemyMaximumYPosition() {
@@ -255,19 +273,19 @@ public abstract class LevelParent extends Observable {
 	}
 	private void removeOffScreenProjectiles() {
 		userProjectiles.removeIf(projectile -> {
-			if (projectile.getTranslateX() > screenWidth) {
-				root.getChildren().remove(projectile);
-				return true;
+			boolean isOffScreen = projectile.getTranslateX() > screenWidth;
+			if (isOffScreen) {
+				root.getChildren().removeAll(projectile, projectile.getBoundingBox());
 			}
-			return false;
+			return isOffScreen;
 		});
 
 		enemyProjectiles.removeIf(projectile -> {
-			if (projectile.getTranslateX() > screenWidth) {
-				root.getChildren().remove(projectile);
-				return true;
+			boolean isOffScreen = projectile.getTranslateX() > screenWidth;
+			if (isOffScreen) {
+				root.getChildren().removeAll(projectile, projectile.getBoundingBox());
 			}
-			return false;
+			return isOffScreen;
 		});
 	}
 }

@@ -13,6 +13,7 @@ public class UserProjectile extends Projectile {
 	@Override
 	public void updatePosition() {
 		moveHorizontally(HORIZONTAL_VELOCITY);
+		updateBoundingBox();
 	}
 	
 	@Override

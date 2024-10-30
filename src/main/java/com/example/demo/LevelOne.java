@@ -24,7 +24,12 @@ public class LevelOne extends LevelParent {
 
 	@Override
 	protected void initializeFriendlyUnits() {
+		UserPlane user = getUser();
+
 		getRoot().getChildren().add(getUser());
+		if(user.isBoundingBoxVisible()){
+			getRoot().getChildren().add(getUser().getBoundingBox());
+		}
 	}
 
 	@Override

@@ -41,6 +41,8 @@ public class UserPlane extends FighterPlane {
 				this.setTranslateX(initialTranslateX);
 			}
 		}
+
+		updateBoundingBox();
 	}
 
 	@Override
