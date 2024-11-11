@@ -48,4 +48,9 @@ public class LevelTwo extends LevelParent {
 		return levelView;
 	}
 
+	@Override
+	protected void updateLevelView(){
+		super.updateLevelView();
+		levelView.updateBossHealth(boss.getHealth());
+	}
 }
