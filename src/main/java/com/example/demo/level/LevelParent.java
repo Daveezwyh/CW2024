@@ -125,7 +125,7 @@ public abstract class LevelParent extends Observable {
 				}
 			}
 		});
-		root.getChildren().add(background);
+		root.getChildren().add(0, background);
 	}
 
 	private void fireProjectile() {
