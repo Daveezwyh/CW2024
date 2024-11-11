@@ -11,7 +11,6 @@ public class MainMenuController {
     @FXML
     private ImageView backgroundImageView;
 
-    // Method to set mainController reference
     public void setMainController(Controller mainController) {
         this.mainController = mainController;
     }
@@ -24,10 +23,9 @@ public class MainMenuController {
     private void updateBackgroundImage(String imagePath) {
         try {
             Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
-            backgroundImageView.setImage(image); // Set the loaded image to the ImageView
+            backgroundImageView.setImage(image);
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle the error (e.g., show an alert or log it)
             mainController.showError("Failed to load background image: " + e.getMessage());
         }
     }
