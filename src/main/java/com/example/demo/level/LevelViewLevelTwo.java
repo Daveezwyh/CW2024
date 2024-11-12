@@ -11,8 +11,8 @@ import javafx.scene.paint.Color;
 
 public class LevelViewLevelTwo extends LevelView {
 
-	private static final int SHIELD_X_POSITION = 0;
-	private static final int SHIELD_Y_POSITION = 0;
+	private static final int SHIELD_X_POSITION = 1000;
+	private static final int SHIELD_Y_POSITION = -5;
 	private static final double BOSS_HEALTH_TEXT_X_POSITION = 1100;
 	private static final double BOSS_HEALTH_TEXT_Y_POSITION = 40;
 	private static final String BOSS_HP_LABEL = "Boss HP: ";

@@ -14,7 +14,7 @@ import javafx.fxml.FXMLLoader;
 
 public class Controller implements Observer {
 
-	public static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.level.LevelTwo";
+	public static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.level.LevelOne";
 	private final Stage stage;
 	private LevelParent currentLevel;
 

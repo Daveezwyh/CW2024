@@ -52,5 +52,10 @@ public class LevelTwo extends LevelParent {
 	protected void updateLevelView(){
 		super.updateLevelView();
 		levelView.updateBossHealth(boss.getHealth());
+		if(boss.getIsShielded()){
+			levelView.showShield();
+		}else{
+			levelView.hideShield();
+		}
 	}
 }
