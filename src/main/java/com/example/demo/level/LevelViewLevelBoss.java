@@ -1,7 +1,6 @@
 package com.example.demo.level;
 
-import com.example.demo.Boss;
-import com.example.demo.ShieldImage;
+import com.example.demo.misc.ShieldImage;
 import javafx.scene.Group;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -9,7 +8,7 @@ import javafx.scene.text.Text;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
-public class LevelViewLevelTwo extends LevelView {
+public class LevelViewLevelBoss extends LevelView {
 
 	private static final int SHIELD_X_POSITION = 1000;
 	private static final int SHIELD_Y_POSITION = -5;
@@ -20,7 +19,7 @@ public class LevelViewLevelTwo extends LevelView {
 	private final ShieldImage shieldImage;
 	private final Text bossHealthText;
 
-	public LevelViewLevelTwo(Group root, int heartsToDisplay) {
+	public LevelViewLevelBoss(Group root, int heartsToDisplay) {
 		super(root, heartsToDisplay);
 		this.root = root;
 		this.shieldImage = new ShieldImage(SHIELD_X_POSITION, SHIELD_Y_POSITION);

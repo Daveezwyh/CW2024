@@ -2,9 +2,9 @@ package com.example.demo.level;
 
 import java.util.*;
 
-import com.example.demo.ActiveActorDestructible;
-import com.example.demo.FighterPlane;
-import com.example.demo.UserPlane;
+import com.example.demo.actor.ActiveActorDestructible;
+import com.example.demo.actor.FighterPlane;
+import com.example.demo.actor.UserPlane;
 import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
