@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.level.LevelSelector;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -34,7 +35,7 @@ public class MainMenuController {
     private void onStartGame() {
         if (mainController != null) {
             try {
-                mainController.goToLevel(Controller.LEVEL_ONE_CLASS_NAME);
+                mainController.goToLevel(LevelSelector.getFirstLevel());
             } catch (Exception e) {
                 e.printStackTrace();
                 mainController.showError("Failed to start game: " + e.getMessage());
@@ -44,7 +45,7 @@ public class MainMenuController {
 
     @FXML
     private void onExit() {
-        Stage stage = (Stage) mainController.getStage();
+        Stage stage = mainController.getStage();
         stage.close();
     }
 }
