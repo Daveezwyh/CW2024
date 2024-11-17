@@ -8,10 +8,11 @@ public class GameOverImage extends ImageView {
 	private static final String IMAGE_NAME = "/com/example/demo/images/gameover.png";
 
 	public GameOverImage(double xPosition, double yPosition) {
-		setImage(new Image(getClass().getResource(IMAGE_NAME).toExternalForm()) );
-//		setImage(ImageSetUp.getImageList().get(ImageSetUp.getGameOver()));
+		setImage(new Image(getClass().getResource(IMAGE_NAME).toExternalForm()));
+		setFitHeight(400);
 		setLayoutX(xPosition);
 		setLayoutY(yPosition);
+		setPreserveRatio(true);
 	}
 
 }

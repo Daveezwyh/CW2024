@@ -3,7 +3,7 @@ package com.example.demo.actor;
 public class EnemyPlane extends FighterPlane {
 
 	private static final String IMAGE_NAME = "enemyplane.png";
-	private static final int IMAGE_HEIGHT = 150;
+	private static final int IMAGE_HEIGHT = 50;
 	private static final int HORIZONTAL_VELOCITY = -6;
 	private static final double PROJECTILE_X_POSITION_OFFSET = -100.0;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 50.0;
@@ -11,7 +11,17 @@ public class EnemyPlane extends FighterPlane {
 	private static final double FIRE_RATE = .01;
 
 	public EnemyPlane(double initialXPos, double initialYPos) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
+		this(initialXPos, initialYPos, new EnemyPlaneMutator());
+	}
+
+	public EnemyPlane(double initialXPos, double initialYPos, EnemyPlaneMutator enemyPlaneMutator) {
+		super(
+				enemyPlaneMutator.getImageName(),
+				enemyPlaneMutator.getImageHeight(),
+				initialXPos,
+				initialYPos,
+				enemyPlaneMutator.getInitialHealth()
+		);
 	}
 
 	@Override

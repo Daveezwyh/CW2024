@@ -3,9 +3,11 @@ package com.example.demo.level;
 import java.util.List;
 
 public class LevelSelector {
+    private static final String PACKAGE_NAME = LevelSelector.class.getPackageName();
     private static final List<String> LEVELS = List.of(
-            "com.example.demo.level.LevelOne",
-            "com.example.demo.level.LevelBoss"
+            PACKAGE_NAME + ".LevelOne",
+            PACKAGE_NAME + ".LevelTwo",
+            PACKAGE_NAME + ".LevelBoss"
     );
     private int currentLevelIndex = 0; // Default to the first level
 
