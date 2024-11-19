@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 	private boolean isDestroyed;
+	private boolean shouldRemove;
 	protected Rectangle boundingBox;
 	private final boolean isBoundingBoxVisible = true;
 	public ActiveActorDestructible(String imageName, int imageHeight, double initialXPos, double initialYPos)
@@ -36,6 +37,16 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 	public boolean isDestroyed() {
 		return isDestroyed;
 	}
+	@Override
+	public void remove(){
+		setShouldRemove(true);
+	}
+	public boolean getShouldRemove(){
+		return shouldRemove;
+	}
+	public void setShouldRemove(boolean shouldRemove){
+		this.shouldRemove = shouldRemove;
+	}
 	public Rectangle getBoundingBox() {
 		return boundingBox;
 	}
@@ -45,7 +56,6 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 		boundingBox.setWidth(getFitWidth());
 		boundingBox.setHeight(getFitHeight());
 	}
-
 	public boolean isBoundingBoxVisible(){
 		return this.isBoundingBoxVisible;
 	}

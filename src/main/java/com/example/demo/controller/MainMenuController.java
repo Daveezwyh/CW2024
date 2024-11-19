@@ -26,8 +26,7 @@ public class MainMenuController {
             Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
             backgroundImageView.setImage(image);
         } catch (Exception e) {
-            e.printStackTrace();
-            mainController.showError("Failed to load background image: " + e.getMessage());
+            mainController.showError(e);
         }
     }
 
@@ -37,8 +36,7 @@ public class MainMenuController {
             try {
                 mainController.goToLevel(LevelSelector.getFirstLevel());
             } catch (Exception e) {
-                e.printStackTrace();
-                mainController.showError("Failed to start game: " + e.getMessage());
+                mainController.showError(e);
             }
         }
     }

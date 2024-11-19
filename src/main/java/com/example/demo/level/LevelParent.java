@@ -20,20 +20,18 @@ public abstract class LevelParent extends Observable {
 	private final double screenHeight;
 	private final double screenWidth;
 	private final double enemyMaximumYPosition;
-
 	private final Group root;
 	private final Timeline timeline;
 	private final UserPlane user;
 	private final Scene scene;
 	private final ImageView background;
-
 	private final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
 	private final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
-
 	private int currentNumberOfEnemies;
 	protected LevelView levelView;
+	private int userKillCount = 0;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -75,9 +73,16 @@ public abstract class LevelParent extends Observable {
 		timeline.play();
 	}
 
+	public void stopGame() {
+		timeline.stop();
+	}
+
 	public void goToNextLevel(String levelName) {
 		setChanged();
-		notifyObservers(levelName);
+		notifyObservers(new LevelNotification(
+				levelName,
+				LevelNotification.Action.NEXT_LEVEL
+		));
 	}
 
 	private void updateScene() {
@@ -91,7 +96,6 @@ public abstract class LevelParent extends Observable {
 		handlePlaneCollisions();
 		removeAllDestroyedActors();
 		removeOffScreenProjectiles();
-		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
 	}
@@ -167,15 +171,16 @@ public abstract class LevelParent extends Observable {
 
 	private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
 		List<ActiveActorDestructible> destroyedActors = actors.stream()
-				.filter(ActiveActorDestructible::isDestroyed)
+				.filter(actor -> actor.isDestroyed() || actor.getShouldRemove())
 				.toList();
 
 		for (ActiveActorDestructible actor : destroyedActors) {
-			// Assuming actor has a method to get its bounding box
 			Rectangle boundingBox = actor.getBoundingBox();
-
-			// Remove the actor and its bounding box from the root
 			root.getChildren().removeAll(actor, boundingBox);
+
+			if (actors == enemyUnits && actor.isDestroyed()) {
+				user.incrementKillCount();
+			}
 		}
 
 		actors.removeAll(destroyedActors);
@@ -209,19 +214,13 @@ public abstract class LevelParent extends Observable {
 		for (ActiveActorDestructible enemy : enemyUnits) {
 			if (enemyHasPenetratedDefenses(enemy)) {
 				user.takeDamage();
-				enemy.destroy();
+				enemy.remove();
 			}
 		}
 	}
 
 	protected void updateLevelView() {
 		levelView.removeHearts(user.getHealth());
-	}
-
-	private void updateKillCount() {
-		for (int i = 0; i < currentNumberOfEnemies - enemyUnits.size(); i++) {
-			user.incrementKillCount();
-		}
 	}
 
 	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {

@@ -5,12 +5,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 import java.util.Observer;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import com.example.demo.level.LevelParent;
 import javafx.fxml.FXMLLoader;
+import com.example.demo.level.LevelParent;
+import com.example.demo.level.LevelNotification;
 
 public class Controller implements Observer {
 	private final Stage stage;
@@ -36,9 +38,8 @@ public class Controller implements Observer {
 			menuController.setMainController(this);
 
 			stage.setScene(menuScene);
-		} catch (IOException e) {
-			e.printStackTrace();
-			showError("Failed to load main menu: " + e.getMessage());
+		} catch (Exception e) {
+			showError(e);
 		}
 	}
 
@@ -60,15 +61,25 @@ public class Controller implements Observer {
 			stage.setScene(scene);
 			currentLevel.startGame();
 	}
-
+	private void handleLoseGame() {
+	}
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		try {
-			goToLevel((String) arg1);
-		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			showError("Error: " + e.getMessage());
+		if (arg1 instanceof LevelNotification notification) {
+			try {
+				switch (notification.getNextAction()) {
+					case NEXT_LEVEL -> {
+						String levelName = notification.getLevelName();
+						goToLevel(levelName);
+					}
+					case WIN_GAME -> {}
+					case LOSE_GAME -> handleLoseGame();
+				}
+			} catch (Exception e) {
+				showError(e);
+			}
+		} else {
+			showError(new Exception("Unexpected notification type received."));
 		}
 	}
 
@@ -76,11 +87,19 @@ public class Controller implements Observer {
 		return stage;
 	}
 
-	public void showError(String message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
+	public void showError(Exception exception) {
+		exception.printStackTrace();
+
+		if (currentLevel != null && currentLevel instanceof LevelParent) {
+			((LevelParent) currentLevel).stopGame();
+		}
+
+		Platform.runLater(() -> {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("An exception occurred");
+			alert.setContentText(exception.getMessage() != null ? exception.getMessage() : "No details available.");
+			alert.showAndWait();
+		});
 	}
 }
