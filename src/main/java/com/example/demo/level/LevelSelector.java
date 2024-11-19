@@ -7,6 +7,7 @@ public class LevelSelector {
     private static final List<String> LEVELS = List.of(
             PACKAGE_NAME + ".LevelOne",
             PACKAGE_NAME + ".LevelTwo",
+            PACKAGE_NAME + ".LevelThree",
             PACKAGE_NAME + ".LevelBoss"
     );
     private int currentLevelIndex = 0; // Default to the first level
