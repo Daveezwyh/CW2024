@@ -46,6 +46,7 @@ public class LevelTwo extends LevelParent {
                 if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
                     EnemyPlaneMutator enemyPlaneMutator = new EnemyPlaneMutator();
                     enemyPlaneMutator.setImageHeight(100);
+                    enemyPlaneMutator.setProjectileYPositionOffset(40);
                     enemyPlaneMutator.setInitialHealth(5);
                     ActiveActorDestructible newEnemy = new EnemyPlane(getScreenWidth(), newEnemyInitialYPosition, enemyPlaneMutator);
                     addEnemyUnit(newEnemy);

@@ -1,10 +1,10 @@
 package com.example.demo.actor;
 
 public class EnemyPlane extends FighterPlane {
-	private static final int HORIZONTAL_VELOCITY = -6;
-	private static final double PROJECTILE_X_POSITION_OFFSET = -100.0;
-	private static final double PROJECTILE_Y_POSITION_OFFSET = 50.0;
-	private static final double FIRE_RATE = .01;
+	private int HORIZONTAL_VELOCITY;
+	private double PROJECTILE_X_POSITION_OFFSET;
+	private double PROJECTILE_Y_POSITION_OFFSET;
+	private double FIRE_RATE;
 
 	public EnemyPlane(double initialXPos, double initialYPos) {
 		this(initialXPos, initialYPos, new EnemyPlaneMutator());
@@ -18,6 +18,10 @@ public class EnemyPlane extends FighterPlane {
 				initialYPos,
 				enemyPlaneMutator.getInitialHealth()
 		);
+		this.HORIZONTAL_VELOCITY = enemyPlaneMutator.getHorizontalVelocity();
+		this.PROJECTILE_X_POSITION_OFFSET = enemyPlaneMutator.getProjectileXPositionOffset();
+		this.PROJECTILE_Y_POSITION_OFFSET = enemyPlaneMutator.getProjectileYPositionOffset();
+		this.FIRE_RATE = enemyPlaneMutator.getFireRate();
 	}
 
 	@Override

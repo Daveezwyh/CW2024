@@ -228,13 +228,18 @@ public abstract class LevelParent extends Observable {
 	}
 
 	protected void winGame() {
-		timeline.stop();
+		stopGame();
 		levelView.showWinImage();
 	}
 
 	protected void loseGame() {
-		timeline.stop();
-		levelView.showGameOverImage();
+		stopGame();
+		//levelView.showGameOverImage();
+		setChanged();
+		notifyObservers(new LevelNotification(
+				"",
+				LevelNotification.Action.LOSE_GAME
+		));
 	}
 
 	protected UserPlane getUser() {
