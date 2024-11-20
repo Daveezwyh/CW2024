@@ -73,8 +73,9 @@ public class Controller implements Observer {
 				Parent overlayRoot = loader.load();
 				gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
 
-				GameOverController overlayController = loader.getController();
-				overlayController.setMainController(this);
+				GameOverController gameOverController = loader.getController();
+				gameOverController.setText("Game Over");
+				gameOverController.setMainController(this);
 			} catch (Exception e) {
 				showError(e);
 				return;

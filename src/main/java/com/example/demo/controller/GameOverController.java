@@ -28,7 +28,6 @@ public class GameOverController {
 
     @FXML
     private void initialize() {
-        gameOverText.setText("Game Over");
         updateBackgroundImage("com/example/demo/images/background1.jpg");
     }
 
@@ -57,5 +56,9 @@ public class GameOverController {
         if (mainController != null) {
             mainController.getStage().close(); // Close the application
         }
+    }
+
+    public void setText(String text){
+        gameOverText.setText(text);
     }
 }
