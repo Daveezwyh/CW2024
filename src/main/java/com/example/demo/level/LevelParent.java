@@ -31,6 +31,8 @@ public abstract class LevelParent extends Observable {
 	private final List<ActiveActorDestructible> enemyProjectiles;
 	private int currentNumberOfEnemies;
 	protected LevelView levelView;
+	private boolean isFiring = false;  // Track whether the player is firing
+	private Timeline firingTimeline;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -116,21 +118,38 @@ public abstract class LevelParent extends Observable {
 				if (kc == KeyCode.DOWN) user.moveDown();
 				if (kc == KeyCode.LEFT) user.moveLeft();
 				if (kc == KeyCode.RIGHT) user.moveRight();
-				if (kc == KeyCode.SPACE) fireProjectile();
+				if (kc == KeyCode.SPACE && !isFiring) {
+					startFiring();
+				}
 			}
 		});
 		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
 				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT
-				){
+				if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT){
 					user.stop();
+				}
+				if (kc == KeyCode.SPACE) {
+					fireProjectile();
+					stopFiring();
 				}
 			}
 		});
 		root.getChildren().add(0, background);
 	}
+	private void startFiring() {
+		isFiring = true;
 
+		firingTimeline = new Timeline(new KeyFrame(Duration.millis(400), e -> fireProjectile()));
+		firingTimeline.setCycleCount(Timeline.INDEFINITE);
+		firingTimeline.play();
+	}
+	private void stopFiring() {
+		if (firingTimeline != null) {
+			firingTimeline.stop();
+		}
+		isFiring = false;
+	}
 	private void fireProjectile() {
 		ActiveActorDestructible projectile = user.fireProjectile();
 		root.getChildren().add(projectile);
