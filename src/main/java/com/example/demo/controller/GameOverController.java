@@ -2,14 +2,25 @@ package com.example.demo.controller;
 
 import com.example.demo.level.LevelSelector;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-public class MainMenuController {
+import javafx.scene.text.Text;
 
+public class GameOverController {
     private Controller mainController;
 
     @FXML
     private ImageView backgroundImageView;
+
+    @FXML
+    private Text gameOverText;
+
+    @FXML
+    private Button restartButton;
+
+    @FXML
+    private Button exitButton;
 
     public void setMainController(Controller mainController) {
         this.mainController = mainController;
@@ -17,6 +28,7 @@ public class MainMenuController {
 
     @FXML
     private void initialize() {
+        gameOverText.setText("Game Over");
         updateBackgroundImage("com/example/demo/images/background1.jpg");
     }
 
@@ -30,7 +42,7 @@ public class MainMenuController {
     }
 
     @FXML
-    private void onStartGame() {
+    private void onRestartButtonClicked() {
         if (mainController != null) {
             try {
                 mainController.goToLevel(LevelSelector.getFirstLevel());
@@ -41,9 +53,9 @@ public class MainMenuController {
     }
 
     @FXML
-    private void onExit() {
+    private void onExitButtonClicked() {
         if (mainController != null) {
-            mainController.getStage().close();
+            mainController.getStage().close(); // Close the application
         }
     }
 }

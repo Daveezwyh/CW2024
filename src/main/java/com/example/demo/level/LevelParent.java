@@ -1,7 +1,6 @@
 package com.example.demo.level;
 
 import java.util.*;
-
 import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
 import com.example.demo.actor.UserPlane;
@@ -13,6 +12,7 @@ import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
+
 public abstract class LevelParent extends Observable {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
@@ -31,7 +31,6 @@ public abstract class LevelParent extends Observable {
 	private final List<ActiveActorDestructible> enemyProjectiles;
 	private int currentNumberOfEnemies;
 	protected LevelView levelView;
-	private int userKillCount = 0;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();

@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
@@ -8,7 +7,7 @@ import java.util.Observer;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import com.example.demo.level.LevelParent;
@@ -17,6 +16,8 @@ import com.example.demo.level.LevelNotification;
 public class Controller implements Observer {
 	private final Stage stage;
 	private LevelParent currentLevel;
+	private Scene mainMenuScene;
+	private Scene gameOverScene;
 
 	public Controller(Stage stage) {
 		this.stage = stage;
@@ -30,17 +31,20 @@ public class Controller implements Observer {
 	}
 
 	private void showMainMenu() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/MainMenu.fxml"));
-			Scene menuScene = new Scene(loader.load(), stage.getWidth(), stage.getHeight());
+		if (mainMenuScene == null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/MainMenu.fxml"));
+				Parent menuRoot = loader.load();
+				mainMenuScene = new Scene(menuRoot, stage.getWidth(), stage.getHeight());
 
-			MainMenuController menuController = loader.getController();
-			menuController.setMainController(this);
-
-			stage.setScene(menuScene);
-		} catch (Exception e) {
-			showError(e);
+				MainMenuController menuController = loader.getController();
+				menuController.setMainController(this);
+			} catch (Exception e) {
+				showError(e);
+				return;
+			}
 		}
+		stage.setScene(mainMenuScene);
 	}
 
 	public void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
@@ -61,7 +65,22 @@ public class Controller implements Observer {
 			stage.setScene(scene);
 			currentLevel.startGame();
 	}
+	private void handleWinGame() {}
 	private void handleLoseGame() {
+		if (gameOverScene == null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
+				Parent overlayRoot = loader.load();
+				gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
+
+				GameOverController overlayController = loader.getController();
+				overlayController.setMainController(this);
+			} catch (Exception e) {
+				showError(e);
+				return;
+			}
+		}
+		stage.setScene(gameOverScene);
 	}
 	@Override
 	public void update(Observable arg0, Object arg1) {
@@ -72,7 +91,7 @@ public class Controller implements Observer {
 						String levelName = notification.getLevelName();
 						goToLevel(levelName);
 					}
-					case WIN_GAME -> {}
+					case WIN_GAME -> handleWinGame();
 					case LOSE_GAME -> handleLoseGame();
 				}
 			} catch (Exception e) {

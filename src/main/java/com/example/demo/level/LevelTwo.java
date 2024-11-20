@@ -43,17 +43,13 @@ public class LevelTwo extends LevelParent {
         for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
             if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
                 double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
+                EnemyPlane newEnemy = null;
                 if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
-                    EnemyPlaneMutator enemyPlaneMutator = new EnemyPlaneMutator();
-                    enemyPlaneMutator.setImageHeight(100);
-                    enemyPlaneMutator.setProjectileYPositionOffset(40);
-                    enemyPlaneMutator.setInitialHealth(5);
-                    ActiveActorDestructible newEnemy = new EnemyPlane(getScreenWidth(), newEnemyInitialYPosition, enemyPlaneMutator);
-                    addEnemyUnit(newEnemy);
+                    newEnemy = makeEnemyPlane(getScreenWidth(), newEnemyInitialYPosition, 1);
                 }else{
-                    ActiveActorDestructible newEnemy = new EnemyPlane(getScreenWidth(), newEnemyInitialYPosition);
-                    addEnemyUnit(newEnemy);
+                    newEnemy = makeEnemyPlane(getScreenWidth(), newEnemyInitialYPosition, 0);
                 }
+                addEnemyUnit(newEnemy);
             }
         }
     }
@@ -65,5 +61,25 @@ public class LevelTwo extends LevelParent {
 
     private boolean userHasReachedKillTarget() {
         return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
+    }
+    private EnemyPlane makeEnemyPlane(double initialXPos, double initialYPos, int type) {
+        EnemyPlane enemyPlane = null;
+
+        switch (type) {
+            case 0:
+                enemyPlane = new EnemyPlane(initialXPos, initialYPos);
+                break;
+            case 1:
+                EnemyPlaneMutator enemyPlaneMutator = new EnemyPlaneMutator();
+                enemyPlaneMutator.setImageHeight(100);
+                enemyPlaneMutator.setProjectileYPositionOffset(40);
+                enemyPlaneMutator.setInitialHealth(5);
+                enemyPlane = new EnemyPlane(initialXPos, initialYPos, enemyPlaneMutator);
+                break;
+            default:
+                enemyPlane = new EnemyPlane(initialXPos, initialYPos);
+        }
+
+        return enemyPlane;
     }
 }
