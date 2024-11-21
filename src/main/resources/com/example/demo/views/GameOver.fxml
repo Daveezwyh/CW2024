@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -15,12 +14,9 @@
     <ImageView fx:id="backgroundImageView" fitHeight="750" fitWidth="1300" />
 
     <VBox alignment="CENTER" spacing="20">
-      <ImageView fitHeight="259.0" fitWidth="259.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/gameover.png" />
-         </image>
+      <ImageView fx:id="gameOverImage" fitHeight="259.0" fitWidth="259.0" pickOnBounds="true" preserveRatio="true">
       </ImageView>
-        <Text fx:id="gameOverText" fill="WHITE" text="Game Over" textAlignment="CENTER" wrappingWidth="138.146484375">
+        <Text fx:id="gameOverText" fill="WHITE" text="Game Over" textAlignment="CENTER" wrappingWidth="341.146484375">
          <font>
             <Font size="29.0" />
          </font></Text>

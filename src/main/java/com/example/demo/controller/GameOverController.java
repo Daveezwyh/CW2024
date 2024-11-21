@@ -8,10 +8,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 public class GameOverController {
+    public enum GameOverCase {
+        WIN,
+        LOSE
+    }
+    private String WIN_IMAGE = "com/example/demo/images/youwin.png";
+    private String LOSE_IMAGE = "com/example/demo/images/gameover.png";
     private Controller mainController;
 
     @FXML
     private ImageView backgroundImageView;
+
+    @FXML
+    private ImageView gameOverImage;
 
     @FXML
     private Text gameOverText;
@@ -40,6 +49,21 @@ public class GameOverController {
         }
     }
 
+    private void setImage(GameOverCase gameOverCase) {
+        String imagePath = switch (gameOverCase) {
+            case WIN -> WIN_IMAGE;
+            case LOSE -> LOSE_IMAGE;
+            default -> LOSE_IMAGE;
+        };
+
+        try {
+            Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+            gameOverImage.setImage(image);
+        } catch (Exception e) {
+            mainController.showError(e);
+        }
+    }
+
     @FXML
     private void onRestartButtonClicked() {
         if (mainController != null) {
@@ -54,11 +78,26 @@ public class GameOverController {
     @FXML
     private void onExitButtonClicked() {
         if (mainController != null) {
-            mainController.getStage().close(); // Close the application
+            mainController.getStage().close();
         }
     }
 
-    public void setText(String text){
+    private void setText(String text){
         gameOverText.setText(text);
+    }
+
+    public void setMode(GameOverCase gameOverCase) {
+        switch (gameOverCase) {
+            case WIN:
+                setText("Congratulations! You Win!");
+                break;
+            case LOSE:
+                setText("Oops, Better luck next time.");
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unhandled GameOverCase: " + gameOverCase);
+        }
+        setImage(gameOverCase);
     }
 }

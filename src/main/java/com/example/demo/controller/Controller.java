@@ -18,6 +18,7 @@ public class Controller implements Observer {
 	private LevelParent currentLevel;
 	private Scene mainMenuScene;
 	private Scene gameOverScene;
+	private GameOverController gameOverController;
 
 	public Controller(Stage stage) {
 		this.stage = stage;
@@ -65,20 +66,21 @@ public class Controller implements Observer {
 			stage.setScene(scene);
 			currentLevel.startGame();
 	}
-	private void handleWinGame() {}
-	private void handleLoseGame() {
-		if (gameOverScene == null) {
-			try {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
-				Parent overlayRoot = loader.load();
-				gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
+	private void handleWinOrLoseGame(LevelNotification.Action wlcase) throws Exception {
+		if (gameOverScene == null || gameOverController == null) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
+			Parent overlayRoot = loader.load();
+			gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
+			gameOverController = loader.getController();
+			gameOverController.setMainController(this);
+		}
 
-				GameOverController gameOverController = loader.getController();
-				gameOverController.setText("Game Over");
-				gameOverController.setMainController(this);
-			} catch (Exception e) {
-				showError(e);
-				return;
+		switch (wlcase) {
+			case WIN_GAME -> {
+				gameOverController.setMode(GameOverController.GameOverCase.WIN);
+			}
+			case LOSE_GAME -> {
+				gameOverController.setMode(GameOverController.GameOverCase.LOSE);
 			}
 		}
 		stage.setScene(gameOverScene);
@@ -87,13 +89,14 @@ public class Controller implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		if (arg1 instanceof LevelNotification notification) {
 			try {
-				switch (notification.getNextAction()) {
+				LevelNotification.Action levelNotificationAction = notification.getNextAction();
+				switch (levelNotificationAction) {
 					case NEXT_LEVEL -> {
 						String levelName = notification.getLevelName();
 						goToLevel(levelName);
 					}
-					case WIN_GAME -> handleWinGame();
-					case LOSE_GAME -> handleLoseGame();
+					case WIN_GAME -> handleWinOrLoseGame(levelNotificationAction);
+					case LOSE_GAME -> handleWinOrLoseGame(levelNotificationAction);
 				}
 			} catch (Exception e) {
 				showError(e);

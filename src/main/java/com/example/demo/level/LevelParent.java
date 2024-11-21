@@ -247,7 +247,12 @@ public abstract class LevelParent extends Observable {
 
 	protected void winGame() {
 		stopGame();
-		levelView.showWinImage();
+		//levelView.showWinImage();
+		setChanged();
+		notifyObservers(new LevelNotification(
+				"",
+				LevelNotification.Action.WIN_GAME
+		));
 	}
 
 	protected void loseGame() {
