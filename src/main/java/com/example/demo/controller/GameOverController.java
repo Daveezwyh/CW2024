@@ -15,31 +15,26 @@ public class GameOverController {
     private String WIN_IMAGE = "com/example/demo/images/youwin.png";
     private String LOSE_IMAGE = "com/example/demo/images/gameover.png";
     private Controller mainController;
-
     @FXML
     private ImageView backgroundImageView;
-
     @FXML
     private ImageView gameOverImage;
-
     @FXML
     private Text gameOverText;
-
     @FXML
     private Button restartButton;
-
+    @FXML
+    private Button mainMenuButton;
     @FXML
     private Button exitButton;
 
     public void setMainController(Controller mainController) {
         this.mainController = mainController;
     }
-
     @FXML
     private void initialize() {
         updateBackgroundImage("com/example/demo/images/background1.jpg");
     }
-
     private void updateBackgroundImage(String imagePath) {
         try {
             Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
@@ -48,7 +43,6 @@ public class GameOverController {
             mainController.showError(e);
         }
     }
-
     private void setImage(GameOverCase gameOverCase) {
         String imagePath = switch (gameOverCase) {
             case WIN -> WIN_IMAGE;
@@ -63,7 +57,6 @@ public class GameOverController {
             mainController.showError(e);
         }
     }
-
     @FXML
     private void onRestartButtonClicked() {
         if (mainController != null) {
@@ -74,18 +67,29 @@ public class GameOverController {
             }
         }
     }
-
+    @FXML
+    private void onMainMenuButtonClicked(){
+        if (mainController != null) {
+            try {
+                mainController.showMainMenu();
+            } catch (Exception e) {
+                mainController.showError(e);
+            }
+        }
+    }
     @FXML
     private void onExitButtonClicked() {
         if (mainController != null) {
-            mainController.getStage().close();
+            try {
+                mainController.getStage().close();
+            } catch (Exception e) {
+                mainController.showError(e);
+            }
         }
     }
-
     private void setText(String text){
         gameOverText.setText(text);
     }
-
     public void setMode(GameOverCase gameOverCase) {
         switch (gameOverCase) {
             case WIN:

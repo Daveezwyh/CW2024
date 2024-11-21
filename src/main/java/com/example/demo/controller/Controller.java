@@ -31,7 +31,7 @@ public class Controller implements Observer {
 		stage.show();
 	}
 
-	private void showMainMenu() {
+	public void showMainMenu() {
 		if (mainMenuScene == null) {
 			try {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/MainMenu.fxml"));
