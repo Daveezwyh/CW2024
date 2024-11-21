@@ -3,6 +3,7 @@ package com.example.demo.level;
 import java.util.*;
 import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
+import com.example.demo.actor.HealthPoint;
 import com.example.demo.actor.UserPlane;
 import javafx.animation.*;
 import javafx.event.EventHandler;
@@ -25,14 +26,16 @@ public abstract class LevelParent extends Observable {
 	private final UserPlane user;
 	private final Scene scene;
 	private final ImageView background;
-	private final List<ActiveActorDestructible> friendlyUnits;
+	protected final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
 	private final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
+	protected final List<ActiveActorDestructible> healthPoints;
 	private int currentNumberOfEnemies;
 	protected LevelView levelView;
-	private boolean isFiring = false;  // Track whether the player is firing
+	private boolean isFiring = false;
 	private Timeline firingTimeline;
+	private final int HP_LINGER_SEC = 5;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -43,6 +46,7 @@ public abstract class LevelParent extends Observable {
 		this.enemyUnits = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
+		this.healthPoints = new ArrayList<>();
 
 		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
 		this.screenHeight = screenHeight;
@@ -59,7 +63,16 @@ public abstract class LevelParent extends Observable {
 	protected abstract void checkIfGameOver();
 
 	protected abstract void spawnEnemyUnits();
+	protected abstract void spawnHealthPoints();
+	protected void destroyExpiredHealthPoints(){
+		long currentTimeSec = System.currentTimeMillis() / 1000;
 
+		healthPoints.forEach(healthPoint -> {
+			if ((currentTimeSec - healthPoint.getCreatedTimeStamp()) > HP_LINGER_SEC) {
+				healthPoint.destroy();
+			}
+		});
+	}
 	protected abstract LevelView instantiateLevelView();
 
 	public Scene initializeScene() {
@@ -88,6 +101,7 @@ public abstract class LevelParent extends Observable {
 
 	private void updateScene() {
 		spawnEnemyUnits();
+		spawnHealthPoints();
 		updateActors();
 		generateEnemyFire();
 		updateNumberOfEnemies();
@@ -95,6 +109,8 @@ public abstract class LevelParent extends Observable {
 		handleUserProjectileCollisions();
 		handleEnemyProjectileCollisions();
 		handlePlaneCollisions();
+		handleUserHealthPointCollisions();
+		destroyExpiredHealthPoints();
 		removeAllDestroyedActors();
 		removeOffScreenProjectiles();
 		updateLevelView();
@@ -185,6 +201,7 @@ public abstract class LevelParent extends Observable {
 		removeDestroyedActors(enemyUnits);
 		removeDestroyedActors(userProjectiles);
 		removeDestroyedActors(enemyProjectiles);
+		removeDestroyedActors(healthPoints);
 	}
 
 	private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
@@ -216,13 +233,24 @@ public abstract class LevelParent extends Observable {
 		handleCollisions(enemyProjectiles, friendlyUnits);
 	}
 
+	private void handleUserHealthPointCollisions() {
+		handleCollisions(friendlyUnits, healthPoints);
+	}
 	private void handleCollisions(List<ActiveActorDestructible> actors1,
 								  List<ActiveActorDestructible> actors2) {
-		for (ActiveActorDestructible actor : actors2) {
-			for (ActiveActorDestructible otherActor : actors1) {
+		for (ActiveActorDestructible actor : actors1) {
+			for (ActiveActorDestructible otherActor : actors2) {
 				if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
-					actor.takeDamage();
-					otherActor.takeDamage();
+					if(actors1 == friendlyUnits && actors2 == enemyUnits){
+						actor.takeDamage();
+						otherActor.destroy();
+					}else if(actors1 == friendlyUnits && actors2 == healthPoints){
+						repairUserDamage(actor);
+						otherActor.takeDamage();
+					}else{
+						actor.takeDamage();
+						otherActor.takeDamage();
+					}
 				}
 			}
 		}
@@ -237,8 +265,10 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
+	protected abstract void repairUserDamage(ActiveActorDestructible userPlane);
+
 	protected void updateLevelView() {
-		levelView.removeHearts(user.getHealth());
+		levelView.updateHearts(user.getHealth());
 	}
 
 	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {

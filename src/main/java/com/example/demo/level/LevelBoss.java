@@ -1,5 +1,6 @@
 package com.example.demo.level;
 
+import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.Boss;
 import com.example.demo.actor.UserPlane;
 
@@ -41,6 +42,12 @@ public class LevelBoss extends LevelParent {
 			addEnemyUnit(boss);
 		}
 	}
+
+	@Override
+	protected void spawnHealthPoints(){}
+
+	@Override
+	protected void repairUserDamage(ActiveActorDestructible userPlane){ return; }
 
 	@Override
 	protected LevelView instantiateLevelView() {

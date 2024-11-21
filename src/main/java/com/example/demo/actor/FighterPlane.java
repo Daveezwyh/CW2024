@@ -19,6 +19,11 @@ public abstract class FighterPlane extends ActiveActorDestructible {
 		}
 	}
 
+	@Override
+	public void repairDamage() {
+		health++;
+	}
+
 	protected double getProjectileXPosition(double xPositionOffset) {
 		return getLayoutX() + getTranslateX() + xPositionOffset;
 	}

@@ -1,16 +1,15 @@
 package com.example.demo.level;
 
-import com.example.demo.actor.EnemyPlane;
-import com.example.demo.actor.EnemyPlaneMutator;
-import com.example.demo.actor.UserPlane;
+import com.example.demo.actor.*;
 import com.example.demo.contracts.EnemyVariation;
 
 public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
     private static final int TOTAL_ENEMIES = 5;
-    private static final int KILLS_TO_ADVANCE = 15;
-    private static final double ENEMY_SPAWN_PROBABILITY = .20;
+    private static final int KILLS_TO_ADVANCE = 20;
+    private static final double ENEMY_SPAWN_PROBABILITY = 0.2;
     private static final int PLAYER_INITIAL_HEALTH = 5;
+    private static final double HP_SPAWN_PROBABILITY = 0.01;
     private final LevelSelector levelSelector;
 
     public LevelTwo(double screenHeight, double screenWidth) {
@@ -51,6 +50,29 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
                 }
                 addEnemyUnit(newEnemy);
             }
+        }
+    }
+
+    @Override
+    protected void spawnHealthPoints(){
+        UserPlane user = getUser();
+
+        if(user.getHealth() < PLAYER_INITIAL_HEALTH && Math.random() < HP_SPAWN_PROBABILITY
+        ){
+            HealthPoint healthPoint = new HealthPoint(user);
+            healthPoints.add(healthPoint);
+            getRoot().getChildren().add(healthPoint);
+
+            if(healthPoint.isBoundingBoxVisible()){
+                getRoot().getChildren().add(healthPoint.getBoundingBox());
+            }
+        }
+    }
+
+    @Override
+    protected void repairUserDamage(ActiveActorDestructible userPlane){
+        if(getUser().getHealth() < PLAYER_INITIAL_HEALTH){
+            userPlane.repairDamage();
         }
     }
 

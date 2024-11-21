@@ -16,6 +16,8 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 		boundingBox = new Rectangle(getFitWidth(), getFitHeight());
 		boundingBox.setStroke(Color.RED);
 		boundingBox.setFill(Color.TRANSPARENT);
+		boundingBox.setX(initialXPos);
+		boundingBox.setY(initialYPos);
 	}
 
 	@Override
@@ -23,8 +25,8 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 
 	public abstract void updateActor();
 
-	@Override
 	public abstract void takeDamage();
+	public abstract void repairDamage();
 
 	@Override
 	public void destroy() {
@@ -60,4 +62,5 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 	public boolean isBoundingBoxVisible(){
 		return this.isBoundingBoxVisible;
 	}
+	public long getCreatedTimeStamp(){ return 0; }
 }

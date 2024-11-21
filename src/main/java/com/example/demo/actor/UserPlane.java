@@ -10,8 +10,8 @@ public class UserPlane extends FighterPlane {
 	private static final double INITIAL_X_POSITION = 5.0;
 	private static final double INITIAL_Y_POSITION = 300.0;
 	private static final int IMAGE_HEIGHT = 80;
-	private static final int VERTICAL_VELOCITY = 12;
-	private static final int HORIZONTAL_VELOCITY = 8;
+	private static final int VERTICAL_VELOCITY = 13;
+	private static final int HORIZONTAL_VELOCITY = 13;
 	private static final int PROJECTILE_X_POSITION_OFFSET = 20;
 	private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
 	private int verticalVelocityMultiplier;
@@ -89,6 +89,22 @@ public class UserPlane extends FighterPlane {
 
 	public void incrementKillCount() {
 		numberOfKills++;
+	}
+
+	public double getXUpperBound() {
+		return X_UPPER_BOUND;
+	}
+
+	public double getXLowerBound() {
+		return X_LOWER_BOUND;
+	}
+
+	public double getYUpperBound() {
+		return Y_UPPER_BOUND;
+	}
+
+	public double getYLowerBound() {
+		return Y_LOWER_BOUND;
 	}
 
 }

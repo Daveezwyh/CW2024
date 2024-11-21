@@ -37,12 +37,19 @@ public class LevelView {
 	public void showGameOverImage() {
 		root.getChildren().add(gameOverImage);
 	}
-	
-	public void removeHearts(int heartsRemaining) {
+
+	public void updateHearts(int heartsRemaining) {
 		int currentNumberOfHearts = heartDisplay.getContainer().getChildren().size();
-		for (int i = 0; i < currentNumberOfHearts - heartsRemaining; i++) {
-			heartDisplay.removeHeart();
+		int difference = heartsRemaining - currentNumberOfHearts;
+
+		if (difference > 0) {
+			for (int i = 0; i < difference; i++) {
+				heartDisplay.addHeart();
+			}
+		} else if (difference < 0) {
+			for (int i = 0; i < -difference; i++) {
+				heartDisplay.removeHeart();
+			}
 		}
 	}
-
 }

@@ -31,7 +31,6 @@ public class HeartDisplay {
 	private void initializeHearts() {
 		for (int i = 0; i < numberOfHeartsToDisplay; i++) {
 			ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
-
 			heart.setFitHeight(HEART_HEIGHT);
 			heart.setPreserveRatio(true);
 			container.getChildren().add(heart);
@@ -41,6 +40,13 @@ public class HeartDisplay {
 	public void removeHeart() {
 		if (!container.getChildren().isEmpty())
 			container.getChildren().remove(INDEX_OF_FIRST_ITEM);
+	}
+
+	public void addHeart(){
+		ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+		heart.setFitHeight(HEART_HEIGHT);
+		heart.setPreserveRatio(true);
+		container.getChildren().add(heart);
 	}
 	
 	public HBox getContainer() {

@@ -12,6 +12,9 @@ public abstract class Projectile extends ActiveActorDestructible {
 	}
 
 	@Override
+	public void repairDamage(){}
+
+	@Override
 	public abstract void updatePosition();
 
 }
