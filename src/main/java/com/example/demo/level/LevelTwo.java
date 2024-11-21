@@ -1,11 +1,11 @@
 package com.example.demo.level;
 
-import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.EnemyPlane;
 import com.example.demo.actor.EnemyPlaneMutator;
 import com.example.demo.actor.UserPlane;
+import com.example.demo.contracts.EnemyVariation;
 
-public class LevelTwo extends LevelParent {
+public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
     private static final int TOTAL_ENEMIES = 5;
     private static final int KILLS_TO_ADVANCE = 15;
@@ -62,7 +62,8 @@ public class LevelTwo extends LevelParent {
     private boolean userHasReachedKillTarget() {
         return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
     }
-    private EnemyPlane makeEnemyPlane(double initialXPos, double initialYPos, int type) {
+    @Override
+    public EnemyPlane makeEnemyPlane(double initialXPos, double initialYPos, int type) {
         EnemyPlane enemyPlane = null;
 
         switch (type) {

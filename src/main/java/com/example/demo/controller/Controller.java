@@ -52,7 +52,9 @@ public class Controller implements Observer {
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 			if(currentLevel != null){
+				currentLevel.stopGame();
 				currentLevel.deleteObserver(this);
+				currentLevel = null;
 			}
 
 			Class<?> myClass = Class.forName(className);
