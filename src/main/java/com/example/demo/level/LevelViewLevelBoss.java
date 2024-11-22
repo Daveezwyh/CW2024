@@ -20,7 +20,7 @@ public class LevelViewLevelBoss extends LevelView {
 	private final Text bossHealthText;
 
 	public LevelViewLevelBoss(Group root, int heartsToDisplay) {
-		super(root, heartsToDisplay);
+		super(root, heartsToDisplay, 1);
 		this.root = root;
 		this.shieldImage = new ShieldImage(SHIELD_X_POSITION, SHIELD_Y_POSITION);
 		this.bossHealthText = new Text(BOSS_HP_LABEL);

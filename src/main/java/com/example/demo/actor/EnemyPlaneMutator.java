@@ -7,7 +7,7 @@ public class EnemyPlaneMutator {
     private int HORIZONTAL_VELOCITY = -6;
     private double PROJECTILE_X_POSITION_OFFSET = -50.0;
     private double PROJECTILE_Y_POSITION_OFFSET = 10.0;
-    private double FIRE_RATE = 0.01;
+    private double FIRE_RATE = 0.015;
 
     public int getHorizontalVelocity() {
         return HORIZONTAL_VELOCITY;
