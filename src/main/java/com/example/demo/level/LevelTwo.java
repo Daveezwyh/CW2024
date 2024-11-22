@@ -6,7 +6,7 @@ import com.example.demo.contracts.EnemyVariation;
 public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
     private static final int TOTAL_ENEMIES = 5;
-    private static final int KILLS_TO_ADVANCE = 2000;
+    private static final int KILLS_TO_ADVANCE = 30;
     private static final double ENEMY_SPAWN_PROBABILITY = 0.2;
     private static final int PLAYER_INITIAL_HEALTH = 5;
     private static final double HP_SPAWN_PROBABILITY = 0.01 ;
