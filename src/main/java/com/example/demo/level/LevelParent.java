@@ -36,6 +36,8 @@ public abstract class LevelParent extends Observable {
 	private boolean isFiring = false;
 	private Timeline firingTimeline;
 	private final int HP_LINGER_SEC = 5;
+	private double backgroundScrollSpeed = 2.0;
+	private double backgroundPosition = 0;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -115,6 +117,7 @@ public abstract class LevelParent extends Observable {
 		removeAllDestroyedActors();
 		removeOffScreenProjectiles();
 		updateLevelView();
+		animateBackground();
 		checkIfGameOver();
 	}
 
@@ -153,6 +156,12 @@ public abstract class LevelParent extends Observable {
 			}
 		});
 		root.getChildren().add(0, background);
+
+		ImageView backgroundCopy = new ImageView(background.getImage());
+		backgroundCopy.setFitHeight(screenHeight);
+		backgroundCopy.setFitWidth(screenWidth);
+		backgroundCopy.setTranslateX(screenWidth);
+		root.getChildren().add(1, backgroundCopy);
 	}
 	private void startFiring() {
 		isFiring = true;
@@ -331,6 +340,16 @@ public abstract class LevelParent extends Observable {
 
 	private void updateNumberOfEnemies() {
 		currentNumberOfEnemies = enemyUnits.size();
+	}
+	protected void animateBackground() {
+		backgroundPosition -= backgroundScrollSpeed;
+
+		if (backgroundPosition <= -screenWidth) {
+			backgroundPosition = 0;
+		}
+
+		background.setTranslateX(backgroundPosition);
+		root.getChildren().get(1).setTranslateX(backgroundPosition + screenWidth);
 	}
 	private void removeOffScreenProjectiles() {
 		userProjectiles.removeIf(projectile -> {

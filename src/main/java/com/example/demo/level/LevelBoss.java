@@ -56,6 +56,11 @@ public class LevelBoss extends LevelParent {
 	}
 
 	@Override
+	protected void animateBackground() {
+		return;
+	}
+
+	@Override
 	protected void updateLevelView(){
 		super.updateLevelView();
 		levelView.updateBossHealth(boss.getHealth());
