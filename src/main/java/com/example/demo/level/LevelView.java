@@ -1,9 +1,6 @@
 package com.example.demo.level;
 
-import com.example.demo.misc.GameOverImage;
-import com.example.demo.misc.HeartDisplay;
-import com.example.demo.misc.KillCounter;
-import com.example.demo.misc.WinImage;
+import com.example.demo.misc.*;
 import javafx.scene.Group;
 
 public class LevelView {
@@ -21,6 +18,7 @@ public class LevelView {
 	private final GameOverImage gameOverImage;
 	private final HeartDisplay heartDisplay;
 	private final KillCounter killCounter;
+	private final PauseOverlay pauseOverlay;
 
 	public LevelView(Group root, int heartsToDisplay, int killsToAdvance) {
 		this.root = root;
@@ -28,6 +26,7 @@ public class LevelView {
 		this.winImage = new WinImage(WIN_IMAGE_X_POSITION, WIN_IMAGE_Y_POSITION);
 		this.gameOverImage = new GameOverImage(LOSS_SCREEN_X_POSITION, LOSS_SCREEN_Y_POSISITION);
 		this.killCounter = new KillCounter(KILL_COUNTER_X_POSITION, KILL_COUNTER_Y_POSITION, killsToAdvance);
+		this.pauseOverlay = new PauseOverlay(root);
 	}
 	
 	public LevelView showHeartDisplay() {
@@ -66,6 +65,9 @@ public class LevelView {
 		return this;
 	}
 
+	public void showPauseOverlay(){ pauseOverlay.show(); }
+
+	public void hidePauseOverlay(){ pauseOverlay.hide(); }
 	public LevelView updateKillCount(int killCount){
 		killCounter.setCurrentKills(killCount)
 				.updateKillCounterText();

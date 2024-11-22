@@ -36,8 +36,9 @@ public abstract class LevelParent extends Observable {
 	private boolean isFiring = false;
 	private Timeline firingTimeline;
 	private final int HP_LINGER_SEC = 5;
-	private double backgroundScrollSpeed = 2.0;
+	private final double backgroundScrollSpeed = 2.0;
 	private double backgroundPosition = 0;
+	private boolean isPaused = false;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -94,6 +95,24 @@ public abstract class LevelParent extends Observable {
 		timeline.stop();
 	}
 
+	public void pauseGame() {
+		if (timeline.getStatus() == Animation.Status.RUNNING) {
+			isPaused = true;
+			timeline.pause();
+			if (firingTimeline != null && firingTimeline.getStatus() == Animation.Status.RUNNING) {
+				firingTimeline.pause();
+			}
+			levelView.showPauseOverlay();
+		} else {
+			isPaused = false;
+			timeline.play();
+			if (firingTimeline != null) {
+				firingTimeline.play();
+			}
+			levelView.hidePauseOverlay();
+		}
+	}
+
 	public void goToNextLevel(String levelName) {
 		setChanged();
 		notifyObservers(new LevelNotification(
@@ -133,18 +152,24 @@ public abstract class LevelParent extends Observable {
 		background.setFitWidth(screenWidth);
 		background.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
+				if (isPaused) {
+					if (e.getCode() == KeyCode.ESCAPE) {
+						pauseGame(); // Allow only pause/resume during pause
+					}
+					return;
+				}
 				KeyCode kc = e.getCode();
 				if (kc == KeyCode.UP) user.moveUp();
 				if (kc == KeyCode.DOWN) user.moveDown();
 				if (kc == KeyCode.LEFT) user.moveLeft();
 				if (kc == KeyCode.RIGHT) user.moveRight();
-				if (kc == KeyCode.SPACE && !isFiring) {
-					startFiring();
-				}
+				if (kc == KeyCode.SPACE && !isFiring) startFiring();
+				if (kc == KeyCode.ESCAPE) pauseGame();
 			}
 		});
 		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
+				if (isPaused) return;
 				KeyCode kc = e.getCode();
 				if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT){
 					user.stop();
