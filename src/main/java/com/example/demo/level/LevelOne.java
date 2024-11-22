@@ -50,9 +50,7 @@ public class LevelOne extends LevelParent {
 	}
 
 	@Override
-	protected void spawnHealthPoints (){
-		return;
-	}
+	protected void spawnHealthPoints (){ return; }
 
 	@Override
 	protected void repairUserDamage (ActiveActorDestructible userPlane){ return; }

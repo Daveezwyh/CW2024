@@ -6,10 +6,10 @@ import com.example.demo.contracts.EnemyVariation;
 public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
     private static final int TOTAL_ENEMIES = 5;
-    private static final int KILLS_TO_ADVANCE = 20;
+    private static final int KILLS_TO_ADVANCE = 2000;
     private static final double ENEMY_SPAWN_PROBABILITY = 0.2;
     private static final int PLAYER_INITIAL_HEALTH = 5;
-    private static final double HP_SPAWN_PROBABILITY = 0.01;
+    private static final double HP_SPAWN_PROBABILITY = 0.01 ;
     private final LevelSelector levelSelector;
 
     public LevelTwo(double screenHeight, double screenWidth) {
@@ -54,16 +54,18 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
 
     @Override
-    protected void spawnHealthPoints(){
+    protected void spawnHealthPoints() {
         UserPlane user = getUser();
 
-        if(user.getHealth() < PLAYER_INITIAL_HEALTH && Math.random() < HP_SPAWN_PROBABILITY
-        ){
+        int currentHealth = user.getHealth();
+        double adjustedProbability = (double) (PLAYER_INITIAL_HEALTH - currentHealth) / PLAYER_INITIAL_HEALTH * HP_SPAWN_PROBABILITY;
+
+        if (currentHealth < PLAYER_INITIAL_HEALTH && Math.random() < adjustedProbability) {
             HealthPoint healthPoint = new HealthPoint(user);
             healthPoints.add(healthPoint);
             getRoot().getChildren().add(healthPoint);
 
-            if(healthPoint.isBoundingBoxVisible()){
+            if (healthPoint.isBoundingBoxVisible()) {
                 getRoot().getChildren().add(healthPoint.getBoundingBox());
             }
         }

@@ -53,16 +53,18 @@ public class LevelThree extends LevelParent {
     }
 
     @Override
-    protected void spawnHealthPoints(){
+    protected void spawnHealthPoints() {
         UserPlane user = getUser();
 
-        if(user.getHealth() < PLAYER_INITIAL_HEALTH && Math.random() < HP_SPAWN_PROBABILITY
-        ){
+        int currentHealth = user.getHealth();
+        double adjustedProbability = (double) (PLAYER_INITIAL_HEALTH - currentHealth) / PLAYER_INITIAL_HEALTH * HP_SPAWN_PROBABILITY;
+
+        if (currentHealth < PLAYER_INITIAL_HEALTH && Math.random() < adjustedProbability) {
             HealthPoint healthPoint = new HealthPoint(user);
             healthPoints.add(healthPoint);
             getRoot().getChildren().add(healthPoint);
 
-            if(healthPoint.isBoundingBoxVisible()){
+            if (healthPoint.isBoundingBoxVisible()) {
                 getRoot().getChildren().add(healthPoint.getBoundingBox());
             }
         }

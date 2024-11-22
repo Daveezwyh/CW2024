@@ -44,7 +44,7 @@ public class LevelBoss extends LevelParent {
 	}
 
 	@Override
-	protected void spawnHealthPoints(){}
+	protected void spawnHealthPoints(){ return; }
 
 	@Override
 	protected void repairUserDamage(ActiveActorDestructible userPlane){ return; }

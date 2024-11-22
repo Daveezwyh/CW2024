@@ -9,7 +9,7 @@ public class Boss extends FighterPlane {
 	private static final double INITIAL_Y_POSITION = 400;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
 	private static final double BOSS_FIRE_RATE = .04;
-	private static final double BOSS_SHIELD_PROBABILITY = 0.01;
+	private static final double BOSS_SHIELD_PROBABILITY = 0.1;
 	private static final int IMAGE_HEIGHT = 120;
 	private static final int VERTICAL_VELOCITY = 8;
 	private static final int HEALTH = 100;
@@ -18,7 +18,7 @@ public class Boss extends FighterPlane {
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
 	private static final int Y_POSITION_UPPER_BOUND = -10;
 	private static final int Y_POSITION_LOWER_BOUND = 600;
-	private static final int MAX_FRAMES_WITH_SHIELD = 100;
+	private static final int MAX_FRAMES_WITH_SHIELD = 50;
 	private final List<Integer> movePattern;
 	private boolean isShielded;
 	private int consecutiveMovesInSameDirection;
@@ -102,7 +102,7 @@ public class Boss extends FighterPlane {
 	}
 
 	private boolean shieldShouldBeActivated() {
-		return Math.random() < BOSS_SHIELD_PROBABILITY;
+		return Math.random() < (1 - getHealth() / (double) HEALTH) * BOSS_SHIELD_PROBABILITY;
 	}
 
 	private boolean shieldExhausted() {
