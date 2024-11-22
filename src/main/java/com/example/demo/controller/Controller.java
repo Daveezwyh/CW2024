@@ -91,15 +91,14 @@ public class Controller implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		if (arg1 instanceof LevelNotification notification) {
 			try {
-				LevelNotification.Action levelNotificationAction = notification.getNextAction();
+				LevelNotification.Action levelNotificationAction = notification.nextAction();
 				switch (levelNotificationAction) {
 					case NEXT_LEVEL -> {
-						String levelName = notification.getLevelName();
+						String levelName = notification.levelName();
 						goToLevel(levelName);
 					}
-					case WIN_GAME -> handleWinOrLoseGame(levelNotificationAction);
-					case LOSE_GAME -> handleWinOrLoseGame(levelNotificationAction);
-				}
+					case WIN_GAME, LOSE_GAME -> handleWinOrLoseGame(levelNotificationAction);
+                }
 			} catch (Exception e) {
 				showError(e);
 			}
@@ -116,7 +115,7 @@ public class Controller implements Observer {
 		exception.printStackTrace();
 
 		if (currentLevel != null && currentLevel instanceof LevelParent) {
-			((LevelParent) currentLevel).stopGame();
+			currentLevel.stopGame();
 		}
 
 		Platform.runLater(() -> {

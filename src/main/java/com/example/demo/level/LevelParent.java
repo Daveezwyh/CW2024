@@ -3,7 +3,6 @@ package com.example.demo.level;
 import java.util.*;
 import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
-import com.example.demo.actor.HealthPoint;
 import com.example.demo.actor.UserPlane;
 import javafx.animation.*;
 import javafx.event.EventHandler;
@@ -32,7 +31,7 @@ public abstract class LevelParent extends Observable {
 	private final List<ActiveActorDestructible> enemyProjectiles;
 	protected final List<ActiveActorDestructible> healthPoints;
 	private int currentNumberOfEnemies;
-	protected LevelView levelView;
+	protected final LevelView levelView;
 	private boolean isFiring = false;
 	private Timeline firingTimeline;
 	private final int HP_LINGER_SEC = 5;
@@ -51,7 +50,7 @@ public abstract class LevelParent extends Observable {
 		this.enemyProjectiles = new ArrayList<>();
 		this.healthPoints = new ArrayList<>();
 
-		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
+		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
@@ -150,36 +149,32 @@ public abstract class LevelParent extends Observable {
 		background.setFocusTraversable(true);
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
-		background.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {
-				if (isPaused) {
-					if (e.getCode() == KeyCode.ESCAPE) {
-						pauseGame(); // Allow only pause/resume during pause
-					}
-					return;
-				}
-				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP) user.moveUp();
-				if (kc == KeyCode.DOWN) user.moveDown();
-				if (kc == KeyCode.LEFT) user.moveLeft();
-				if (kc == KeyCode.RIGHT) user.moveRight();
-				if (kc == KeyCode.SPACE && !isFiring) startFiring();
-				if (kc == KeyCode.ESCAPE) pauseGame();
-			}
-		});
-		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {
-				if (isPaused) return;
-				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT){
-					user.stop();
-				}
-				if (kc == KeyCode.SPACE) {
-					fireProjectile();
-					stopFiring();
-				}
-			}
-		});
+		background.setOnKeyPressed(e -> {
+            if (isPaused) {
+                if (e.getCode() == KeyCode.ESCAPE) {
+                    pauseGame(); // Allow only pause/resume during pause
+                }
+                return;
+            }
+            KeyCode kc = e.getCode();
+            if (kc == KeyCode.UP) user.moveUp();
+            if (kc == KeyCode.DOWN) user.moveDown();
+            if (kc == KeyCode.LEFT) user.moveLeft();
+            if (kc == KeyCode.RIGHT) user.moveRight();
+            if (kc == KeyCode.SPACE && !isFiring) startFiring();
+            if (kc == KeyCode.ESCAPE) pauseGame();
+        });
+		background.setOnKeyReleased(e -> {
+            if (isPaused) return;
+            KeyCode kc = e.getCode();
+            if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT) {
+                user.stop();
+            }
+            if (kc == KeyCode.SPACE) {
+                fireProjectile();
+                stopFiring();
+            }
+        });
 		root.getChildren().add(0, background);
 
 		ImageView backgroundCopy = new ImageView(background.getImage());
@@ -225,10 +220,10 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void updateActors() {
-		friendlyUnits.forEach(plane -> plane.updateActor());
-		enemyUnits.forEach(enemy -> enemy.updateActor());
-		userProjectiles.forEach(projectile -> projectile.updateActor());
-		enemyProjectiles.forEach(projectile -> projectile.updateActor());
+		friendlyUnits.forEach(ActiveActorDestructible::updateActor);
+		enemyUnits.forEach(ActiveActorDestructible::updateActor);
+		userProjectiles.forEach(ActiveActorDestructible::updateActor);
+		enemyProjectiles.forEach(ActiveActorDestructible::updateActor);
 	}
 
 	private void removeAllDestroyedActors() {

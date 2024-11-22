@@ -56,16 +56,12 @@ public class UserPlane extends FighterPlane {
 	}
 
 	private boolean isMoving(String direction) {
-		switch (direction.toLowerCase()) {
-			case "vertical":
-				return verticalVelocityMultiplier != 0;
-			case "horizontal":
-				return horizontalVelocityMultiplier != 0;
-			case "any":
-				return verticalVelocityMultiplier != 0 || horizontalVelocityMultiplier != 0;
-			default:
-				throw new IllegalArgumentException("Invalid direction: " + direction);
-		}
+        return switch (direction.toLowerCase()) {
+            case "vertical" -> verticalVelocityMultiplier != 0;
+            case "horizontal" -> horizontalVelocityMultiplier != 0;
+            case "any" -> verticalVelocityMultiplier != 0 || horizontalVelocityMultiplier != 0;
+            default -> throw new IllegalArgumentException("Invalid direction: " + direction);
+        };
 	}
 
 	public void moveUp() { verticalVelocityMultiplier = -1; }

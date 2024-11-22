@@ -7,7 +7,7 @@ public class HealthPoint extends ActiveActorDestructible {
     private static final int IMAGE_HEIGHT = 30;
     private static final int Y_UPPER_OFFSET = 100; // So that it does not appear in the User HeartDisplay
     private static final int X_UPPER_OFFSET = 300; // So it is not too close to the User
-    private long createdTimeStamp;
+    private final long createdTimeStamp;
     public HealthPoint(UserPlane userPlane) {
         super(
                 IMAGE_NAME,

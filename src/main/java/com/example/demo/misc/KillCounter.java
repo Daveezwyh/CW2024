@@ -1,6 +1,5 @@
 package com.example.demo.misc;
 
-import com.example.demo.level.LevelView;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -24,18 +23,6 @@ public class KillCounter {
 
     public Text getKillCounterText() {
         return killCounterText;
-    }
-
-    public void incrementKillCount() {
-        if (currentKills < killsToAdvance) {
-            currentKills++;
-            updateKillCounterText();
-        }
-    }
-
-    public void resetKillCount() {
-        currentKills = 0;
-        updateKillCounterText();
     }
 
     public KillCounter setCurrentKills(int currentKills) {

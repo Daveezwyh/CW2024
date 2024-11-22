@@ -6,7 +6,8 @@ import javafx.scene.shape.Rectangle;
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 	private boolean isDestroyed;
 	private boolean shouldRemove;
-	protected Rectangle boundingBox;
+	protected final Rectangle boundingBox;
+	@SuppressWarnings("FieldCanBeLocal")
 	private final boolean isBoundingBoxVisible = true;
 	public ActiveActorDestructible(String imageName, int imageHeight, double initialXPos, double initialYPos)
 	{

@@ -44,10 +44,12 @@ public class LevelBoss extends LevelParent {
 	}
 
 	@Override
-	protected void spawnHealthPoints(){ return; }
+	protected void spawnHealthPoints(){
+    }
 
 	@Override
-	protected void repairUserDamage(ActiveActorDestructible userPlane){ return; }
+	protected void repairUserDamage(ActiveActorDestructible userPlane){
+    }
 
 	@Override
 	protected LevelView instantiateLevelView() {
@@ -57,8 +59,7 @@ public class LevelBoss extends LevelParent {
 
 	@Override
 	protected void animateBackground() {
-		return;
-	}
+    }
 
 	@Override
 	protected void updateLevelView(){

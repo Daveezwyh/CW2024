@@ -7,13 +7,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import java.util.Objects;
+
 public class GameOverController {
     public enum GameOverCase {
         WIN,
         LOSE
     }
-    private String WIN_IMAGE = "com/example/demo/images/youwin.png";
-    private String LOSE_IMAGE = "com/example/demo/images/gameover.png";
+    private final String WIN_IMAGE = "com/example/demo/images/youwin.png";
+    private final String LOSE_IMAGE = "com/example/demo/images/gameover.png";
     private Controller mainController;
     @FXML
     private ImageView backgroundImageView;
@@ -33,11 +35,11 @@ public class GameOverController {
     }
     @FXML
     private void initialize() {
-        updateBackgroundImage("com/example/demo/images/background1.jpg");
+        updateBackgroundImage();
     }
-    private void updateBackgroundImage(String imagePath) {
+    private void updateBackgroundImage() {
         try {
-            Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + "com/example/demo/images/background1.jpg")));
             backgroundImageView.setImage(image);
         } catch (Exception e) {
             mainController.showError(e);
@@ -51,7 +53,7 @@ public class GameOverController {
         };
 
         try {
-            Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + imagePath)));
             gameOverImage.setImage(image);
         } catch (Exception e) {
             mainController.showError(e);

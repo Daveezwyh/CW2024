@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane alignment="CENTER" prefHeight="600" prefWidth="800" style="-fx-background-color: rgba(0, 0, 0, 0.7);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameOverController">
+<StackPane prefHeight="600" prefWidth="800" style="-fx-background-color: rgba(0, 0, 0, 0.7);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameOverController">
     <ImageView fx:id="backgroundImageView" fitHeight="750" fitWidth="1300" />
    <HBox alignment="CENTER" prefHeight="491.0" prefWidth="1300.0">
       <children>
@@ -18,7 +18,7 @@
             <image>
                <Image url="@../images/youwin.png" />
             </image></ImageView>
-      
+
           <VBox alignment="CENTER" prefHeight="750.0" prefWidth="423.0" spacing="20">
               <Text fx:id="gameOverText" fill="WHITE" text="Game Over" textAlignment="CENTER" wrappingWidth="396.81317138671875">
                <font>

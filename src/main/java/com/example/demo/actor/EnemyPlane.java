@@ -1,10 +1,10 @@
 package com.example.demo.actor;
 
 public class EnemyPlane extends FighterPlane {
-	private int HORIZONTAL_VELOCITY;
-	private double PROJECTILE_X_POSITION_OFFSET;
-	private double PROJECTILE_Y_POSITION_OFFSET;
-	private double FIRE_RATE;
+	private final int HORIZONTAL_VELOCITY;
+	private final double PROJECTILE_X_POSITION_OFFSET;
+	private final double PROJECTILE_Y_POSITION_OFFSET;
+	private final double FIRE_RATE;
 
 	public EnemyPlane(double initialXPos, double initialYPos) {
 		this(initialXPos, initialYPos, new EnemyPlaneMutator());

@@ -42,7 +42,7 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
         for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
             if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
                 double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
-                EnemyPlane newEnemy = null;
+                EnemyPlane newEnemy;
                 if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
                     newEnemy = makeEnemyPlane(getScreenWidth(), newEnemyInitialYPosition, 1);
                 }else{
@@ -88,7 +88,7 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
     @Override
     public EnemyPlane makeEnemyPlane(double initialXPos, double initialYPos, int type) {
-        EnemyPlane enemyPlane = null;
+        EnemyPlane enemyPlane;
 
         switch (type) {
             case 0:

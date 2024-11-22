@@ -4,6 +4,9 @@ import com.example.demo.level.LevelSelector;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.util.Objects;
+
 public class MainMenuController {
 
     private Controller mainController;
@@ -17,12 +20,12 @@ public class MainMenuController {
 
     @FXML
     private void initialize() {
-        updateBackgroundImage("com/example/demo/images/background1.jpg");
+        updateBackgroundImage();
     }
 
-    private void updateBackgroundImage(String imagePath) {
+    private void updateBackgroundImage() {
         try {
-            Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + "com/example/demo/images/background1.jpg")));
             backgroundImageView.setImage(image);
         } catch (Exception e) {
             mainController.showError(e);
