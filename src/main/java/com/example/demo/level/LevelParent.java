@@ -5,7 +5,6 @@ import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
 import com.example.demo.actor.UserPlane;
 import javafx.animation.*;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
@@ -25,7 +24,7 @@ public abstract class LevelParent extends Observable {
 	private final UserPlane user;
 	private final Scene scene;
 	private final ImageView background;
-	protected final List<ActiveActorDestructible> friendlyUnits;
+	private final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
 	private final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
@@ -152,7 +151,7 @@ public abstract class LevelParent extends Observable {
 		background.setOnKeyPressed(e -> {
             if (isPaused) {
                 if (e.getCode() == KeyCode.ESCAPE) {
-                    pauseGame(); // Allow only pause/resume during pause
+                    pauseGame();
                 }
                 return;
             }
@@ -252,38 +251,20 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void handlePlaneCollisions() {
-		handleCollisions(friendlyUnits, enemyUnits);
+		CollisionHandler.handlePlaneCollisions(friendlyUnits, enemyUnits);
 	}
 
 	private void handleUserProjectileCollisions() {
-		handleCollisions(userProjectiles, enemyUnits);
+		CollisionHandler.handleUserProjectileCollisions(userProjectiles, enemyUnits);
 	}
 
 	private void handleEnemyProjectileCollisions() {
-		handleCollisions(enemyProjectiles, friendlyUnits);
+		CollisionHandler.handleEnemyProjectileCollisions(enemyProjectiles, friendlyUnits);
 	}
 
-	private void handleUserHealthPointCollisions() {
-		handleCollisions(friendlyUnits, healthPoints);
-	}
-	private void handleCollisions(List<ActiveActorDestructible> actors1,
-								  List<ActiveActorDestructible> actors2) {
-		for (ActiveActorDestructible actor : actors1) {
-			for (ActiveActorDestructible otherActor : actors2) {
-				if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
-					if(actors1 == friendlyUnits && actors2 == enemyUnits){
-						actor.takeDamage();
-						otherActor.destroy();
-					}else if(actors1 == friendlyUnits && actors2 == healthPoints){
-						repairUserDamage(actor);
-						otherActor.takeDamage();
-					}else{
-						actor.takeDamage();
-						otherActor.takeDamage();
-					}
-				}
-			}
-		}
+	protected void handleUserHealthPointCollisions(){
+		// Override in each level that enable spawn HP
+		return;
 	}
 
 	private void handleEnemyPenetration() {
@@ -294,8 +275,6 @@ public abstract class LevelParent extends Observable {
 			}
 		}
 	}
-
-	protected abstract void repairUserDamage(ActiveActorDestructible userPlane);
 
 	protected void updateLevelView() {
 		levelView.updateHearts(user.getHealth())
@@ -336,6 +315,14 @@ public abstract class LevelParent extends Observable {
 
 	protected int getCurrentNumberOfEnemies() {
 		return enemyUnits.size();
+	}
+
+	protected List<ActiveActorDestructible> getFriendlyUnits(){
+		return friendlyUnits;
+	}
+
+	protected List<ActiveActorDestructible> getHealthPoints(){
+		return healthPoints;
 	}
 
 	protected void addEnemyUnit(ActiveActorDestructible enemy) {

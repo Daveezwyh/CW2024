@@ -72,10 +72,12 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
 
     @Override
-    protected void repairUserDamage(ActiveActorDestructible userPlane){
-        if(getUser().getHealth() < PLAYER_INITIAL_HEALTH){
-            userPlane.repairDamage();
-        }
+    protected void handleUserHealthPointCollisions(){
+        CollisionHandler.handleUserHealthPointCollisions(
+                PLAYER_INITIAL_HEALTH,
+                getUser(),
+                getHealthPoints()
+        );
     }
 
     @Override

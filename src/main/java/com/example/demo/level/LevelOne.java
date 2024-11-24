@@ -54,9 +54,6 @@ public class LevelOne extends LevelParent {
     }
 
 	@Override
-	protected void repairUserDamage (ActiveActorDestructible userPlane){
-    }
-	@Override
 	protected LevelView instantiateLevelView() {
 		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH, KILLS_TO_ADVANCE);
 	}
