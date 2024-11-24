@@ -1,0 +1,66 @@
+#backgroundImageView {
+    -fx-fit-height: 750px;
+    -fx-fit-width: 1300px;
+}
+
+#menuContainer {
+    -fx-pref-height: 61px;
+    -fx-pref-width: 1300px;
+    -fx-padding: 0 0 100px 0;
+}
+
+#gameLogo {
+    -fx-fit-height: 249px;
+    -fx-fit-width: 246px;
+    -fx-preserve-ratio: true;
+}
+
+#menuOptions {
+    -fx-alignment: center;
+    -fx-pref-height: 516px;
+    -fx-pref-width: 355px;
+}
+
+#gameTitle {
+    -fx-fill: white;
+    -fx-stroke: black;
+    -fx-stroke-type: outside;
+    -fx-font: bold 48px "System";
+    -fx-text-alignment: center;
+    -fx-wrapping-width: 324.736px;
+    -fx-margin: 30px 0 30px 0;
+}
+
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: #4d73ff;
+    -fx-font-size: 20px;
+    -fx-pref-height: 26;
+    -fx-pref-width: 329;
+    -fx-background-radius: 5;
+    -fx-border-color: #4d73ff;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.button:hover {
+    -fx-background-color: #4d73ff;
+    -fx-text-fill: white;
+    -fx-border-color: #4d73ff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 4);
+    -fx-transition: all 0.3s ease;
+}
+
+#startButton {
+    -fx-pref-height: 26px;
+    -fx-pref-width: 329px;
+    -fx-font-size: 20px;
+    -fx-margin: 30px 0 10px 0;
+}
+
+#exitButton {
+    -fx-pref-height: 26px;
+    -fx-pref-width: 326px;
+    -fx-font-size: 20px;
+    -fx-margin: 10px 0 30px 0;
+}

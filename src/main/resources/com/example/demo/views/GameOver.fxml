@@ -7,44 +7,27 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane prefHeight="600" prefWidth="800" style="-fx-background-color: rgba(0, 0, 0, 0.7);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameOverController">
+<StackPane prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameOverController">
     <ImageView fx:id="backgroundImageView" fitHeight="750" fitWidth="1300" />
-   <HBox alignment="CENTER" prefHeight="491.0" prefWidth="1300.0">
-      <children>
-         <ImageView fx:id="gameOverImage" fitHeight="380.0" fitWidth="380.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@../images/youwin.png" />
-            </image></ImageView>
+    <HBox alignment="CENTER" prefHeight="491.0" prefWidth="1300.0" stylesheets="@../styles/GameOver.css">
+        <children>
+            <ImageView fx:id="gameOverImage" fitHeight="380.0" fitWidth="380.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/youwin.png" />
+                </image></ImageView>
 
-          <VBox alignment="CENTER" prefHeight="750.0" prefWidth="423.0" spacing="20">
-              <Text fx:id="gameOverText" fill="WHITE" text="Game Over" textAlignment="CENTER" wrappingWidth="396.81317138671875">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="10.0" top="40.0" />
-               </VBox.margin>
-            </Text>
-                <Button fx:id="restartButton" onAction="#onRestartButtonClicked" prefHeight="26.0" prefWidth="330.0" text="Restart">
-               <font>
-                  <Font size="20.0" />
-               </font></Button>
-                <Button fx:id="mainMenuButton" onAction="#onMainMenuButtonClicked" prefHeight="26.0" prefWidth="330.0" text="Main Menu">
-               <font>
-                  <Font size="20.0" />
-               </font></Button>
-                <Button fx:id="exitButton" onAction="#onExitButtonClicked" prefHeight="26.0" prefWidth="333.0" text="Exit">
-               <font>
-                  <Font size="20.0" />
-               </font></Button>
-              <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1300.0" spacing="10" />
-          </VBox>
-      </children>
-      <padding>
-         <Insets bottom="150.0" />
-      </padding>
-   </HBox>
+            <VBox alignment="CENTER" prefHeight="750.0" prefWidth="423.0" spacing="20">
+                <Text fx:id="gameOverText" text="Game Over" textAlignment="CENTER" wrappingWidth="396.81317138671875" />
+                <Button fx:id="restartButton" onAction="#onRestartButtonClicked" text="Restart" />
+                <Button fx:id="mainMenuButton" onAction="#onMainMenuButtonClicked" text="Main Menu" />
+                <Button fx:id="exitButton" onAction="#onExitButtonClicked" text="Exit" />
+                <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1300.0" spacing="10" />
+            </VBox>
+        </children>
+        <padding>
+            <Insets bottom="150.0" />
+        </padding>
+    </HBox>
 </StackPane>

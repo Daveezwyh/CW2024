@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.application.Platform;
@@ -37,6 +38,9 @@ public class Controller implements Observer {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/MainMenu.fxml"));
 				Parent menuRoot = loader.load();
 				mainMenuScene = new Scene(menuRoot, stage.getWidth(), stage.getHeight());
+				mainMenuScene.getStylesheets().add(
+						Objects.requireNonNull(getClass().getResource("/com/example/demo/styles/MainMenu.css")).toExternalForm()
+				);
 
 				MainMenuController menuController = loader.getController();
 				menuController.setMainController(this);
@@ -73,6 +77,9 @@ public class Controller implements Observer {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
 			Parent overlayRoot = loader.load();
 			gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
+			gameOverScene.getStylesheets().add(
+					Objects.requireNonNull(getClass().getResource("/com/example/demo/styles/GameOver.css")).toExternalForm()
+			);
 			gameOverController = loader.getController();
 			gameOverController.setMainController(this);
 		}

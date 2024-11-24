@@ -1,0 +1,53 @@
+.stack-pane {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+}
+
+#backgroundImageView {
+    -fx-fit-height: 750px;
+    -fx-fit-width: 1300px;
+}
+
+#gameOverImage {
+    -fx-fit-height: 380px;
+    -fx-fit-width: 380px;
+    -fx-preserve-ratio: true;
+}
+
+.vbox {
+    -fx-alignment: center;
+    -fx-pref-height: 750px;
+    -fx-pref-width: 423px;
+    -fx-spacing: 20px;
+}
+
+#gameOverText {
+    -fx-fill: white;
+    -fx-font-size: 24px;
+    -fx-text-alignment: center;
+    -fx-wrapping-width: 396.813px;
+    -fx-margin: 40px 0 10px 0;
+}
+
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: #4d73ff;
+    -fx-font-size: 20px;
+    -fx-pref-height: 26px;
+    -fx-pref-width: 330px;
+    -fx-background-radius: 5px;
+    -fx-border-color: #4d73ff;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #4d73ff;
+    -fx-text-fill: white;
+    -fx-border-color: #4d73ff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 4);
+    -fx-transition: all 0.3s ease;
+}
+
+#exitButton {
+    -fx-pref-width: 333px;
+}
