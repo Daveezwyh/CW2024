@@ -1,6 +1,7 @@
 package com.example.demo.level;
 
 import com.example.demo.actor.*;
+import com.example.demo.misc.CollisionHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ class CollisionsTest {
     }
     @Test
     void testUserProjectileCollisions(){
+        UserPlane userPlane = mock(UserPlane.class);
+
         UserProjectile userProjectile = mock(UserProjectile.class);
         userProjectiles.add(userProjectile);
 
@@ -39,7 +42,7 @@ class CollisionsTest {
         when(userProjectile.getBoundsInParent()).thenReturn(userBounds);
         when(enemyPlane.getBoundsInParent()).thenReturn(enemyBounds);
 
-        CollisionHandler.handleUserProjectileCollisions(userProjectiles, enemyUnits);
+        CollisionHandler.handleUserProjectileCollisions(userPlane, userProjectiles, enemyUnits);
 
         verify(userProjectile, times(1)).takeDamage();
         verify(enemyPlane, times(1)).takeDamage();

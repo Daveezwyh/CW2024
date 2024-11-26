@@ -1,4 +1,4 @@
-package com.example.demo.level;
+package com.example.demo.misc;
 
 import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.UserPlane;
@@ -8,16 +8,25 @@ import java.util.List;
 public class CollisionHandler {
     CollisionHandler() {}
 
-    public static void handleUserProjectileCollisions(List<ActiveActorDestructible> userProjectiles, List<ActiveActorDestructible> enemyUnits)
+    public static int handleUserProjectileCollisions(
+            UserPlane userPlane,
+            List<ActiveActorDestructible> userProjectiles,
+            List<ActiveActorDestructible> enemyUnits)
     {
+        int scoreIndex = 0;
+
         for (ActiveActorDestructible userProjectile : userProjectiles) {
             for (ActiveActorDestructible enemyUnit : enemyUnits) {
                 if (userProjectile.getBoundsInParent().intersects(enemyUnit.getBoundsInParent())) {
                     userProjectile.takeDamage();
                     enemyUnit.takeDamage();
+
+                    scoreIndex += GameScoreCalculator.calculateUserScoreByPosition(userPlane);
                 }
             }
         }
+
+        return scoreIndex;
     }
 
     public static void handleEnemyProjectileCollisions(List<ActiveActorDestructible> enemyProjectiles, List<ActiveActorDestructible> friendlyUnits)

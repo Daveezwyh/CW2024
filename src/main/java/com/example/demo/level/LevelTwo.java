@@ -2,6 +2,7 @@ package com.example.demo.level;
 
 import com.example.demo.actor.*;
 import com.example.demo.contracts.EnemyVariation;
+import com.example.demo.misc.CollisionHandler;
 
 public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";

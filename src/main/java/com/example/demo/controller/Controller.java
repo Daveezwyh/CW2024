@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
+
+import com.example.demo.misc.GameScore;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,9 +22,11 @@ public class Controller implements Observer {
 	private Scene mainMenuScene;
 	private Scene gameOverScene;
 	private GameOverController gameOverController;
+	private GameScore gameScore;
 
 	public Controller(Stage stage) {
 		this.stage = stage;
+		this.gameScore = new GameScore(0);
 	}
 
 	public void launchGame() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
@@ -57,20 +61,24 @@ public class Controller implements Observer {
 	{
 			if(currentLevel != null){
 				currentLevel.stopGame();
-				currentLevel.deleteObserver(this);
-				currentLevel = null;
+				cleanUp();
 			}
 
 			Class<?> myClass = Class.forName(className);
 			Constructor<?> constructor = myClass.getConstructor(double.class, double.class);
 			currentLevel = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth());
 			currentLevel.addObserver(this);
+			currentLevel.addGameScore(gameScore);
 
 			Scene scene = currentLevel.initializeScene();
-
-			stage.setScene(null);
 			stage.setScene(scene);
+
 			currentLevel.startGame();
+	}
+	private void cleanUp(){
+		currentLevel.deleteObserver(this);
+		currentLevel = null;
+		stage.setScene(null);
 	}
 	private void handleWinOrLoseGame(LevelNotification.Action wlcase) throws Exception {
 		if (gameOverScene == null || gameOverController == null) {
@@ -92,6 +100,8 @@ public class Controller implements Observer {
 				gameOverController.setMode(GameOverController.GameOverCase.LOSE);
 			}
 		}
+
+		gameScore.resetScore();
 		stage.setScene(gameOverScene);
 	}
 	@Override

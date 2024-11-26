@@ -4,6 +4,8 @@ import java.util.*;
 import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
 import com.example.demo.actor.UserPlane;
+import com.example.demo.misc.CollisionHandler;
+import com.example.demo.misc.GameScore;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -37,6 +39,7 @@ public abstract class LevelParent extends Observable {
 	private final double backgroundScrollSpeed = 2.0;
 	private double backgroundPosition = 0;
 	private boolean isPaused = false;
+	protected GameScore gameScore;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -59,6 +62,9 @@ public abstract class LevelParent extends Observable {
 		friendlyUnits.add(user);
 	}
 
+	public void addGameScore(GameScore gameScore){
+		this.gameScore = gameScore;
+	}
 	protected abstract void initializeFriendlyUnits();
 
 	protected abstract void checkIfGameOver();
@@ -126,9 +132,7 @@ public abstract class LevelParent extends Observable {
 		generateEnemyFire();
 		updateNumberOfEnemies();
 		handleEnemyPenetration();
-		handleUserProjectileCollisions();
-		handleEnemyProjectileCollisions();
-		handlePlaneCollisions();
+		handleGenericCollisions();
 		handleUserHealthPointCollisions();
 		destroyExpiredHealthPoints();
 		removeAllDestroyedActors();
@@ -250,16 +254,11 @@ public abstract class LevelParent extends Observable {
 		actors.removeAll(destroyedActors);
 	}
 
-	private void handlePlaneCollisions() {
-		CollisionHandler.handlePlaneCollisions(friendlyUnits, enemyUnits);
-	}
-
-	private void handleUserProjectileCollisions() {
-		CollisionHandler.handleUserProjectileCollisions(userProjectiles, enemyUnits);
-	}
-
-	private void handleEnemyProjectileCollisions() {
+	private void handleGenericCollisions(){
+		int scoreIncrement = CollisionHandler.handleUserProjectileCollisions(user, userProjectiles, enemyUnits);
 		CollisionHandler.handleEnemyProjectileCollisions(enemyProjectiles, friendlyUnits);
+		CollisionHandler.handlePlaneCollisions(friendlyUnits, enemyUnits);
+		gameScore.increaseScoreBy(scoreIncrement);
 	}
 
 	protected void handleUserHealthPointCollisions(){
