@@ -1,4 +1,4 @@
-package com.example.demo.contracts;
+package com.example.demo.contract;
 
 import com.example.demo.actor.EnemyPlane;
 

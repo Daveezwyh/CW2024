@@ -1,7 +1,7 @@
 package com.example.demo.level;
 
 import com.example.demo.actor.*;
-import com.example.demo.contracts.EnemyVariation;
+import com.example.demo.contract.EnemyVariation;
 import com.example.demo.misc.CollisionHandler;
 
 public class LevelTwo extends LevelParent implements EnemyVariation {

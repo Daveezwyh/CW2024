@@ -13,6 +13,8 @@ import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 public abstract class LevelParent extends Observable {
 
@@ -292,22 +294,32 @@ public abstract class LevelParent extends Observable {
 
 	protected void winGame() {
 		stopGame();
-		//levelView.showWinImage();
-		setChanged();
-		notifyObservers(new LevelNotification(
-				"",
-				LevelNotification.Action.WIN_GAME
-		));
+		levelView.showWinImage();
+
+		PauseTransition pause = new PauseTransition(Duration.seconds(2));
+		pause.setOnFinished(event -> {
+			setChanged();
+			notifyObservers(new LevelNotification(
+					"",
+					LevelNotification.Action.WIN_GAME
+			));
+		});
+		pause.play();
 	}
 
 	protected void loseGame() {
 		stopGame();
-		//levelView.showGameOverImage();
-		setChanged();
-		notifyObservers(new LevelNotification(
-				"",
-				LevelNotification.Action.LOSE_GAME
-		));
+		levelView.showGameOverImage();
+
+		PauseTransition pause = new PauseTransition(Duration.seconds(2));
+		pause.setOnFinished(event -> {
+			setChanged();
+			notifyObservers(new LevelNotification(
+					"",
+					LevelNotification.Action.LOSE_GAME
+			));
+		});
+		pause.play();
 	}
 
 	protected UserPlane getUser() {

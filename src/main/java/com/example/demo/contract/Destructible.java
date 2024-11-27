@@ -1,4 +1,4 @@
-package com.example.demo.contracts;
+package com.example.demo.contract;
 
 /**
  * Represents an entity that can be destroyed or removed.

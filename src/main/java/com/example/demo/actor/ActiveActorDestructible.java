@@ -1,6 +1,6 @@
 package com.example.demo.actor;
 
-import com.example.demo.contracts.Destructible;
+import com.example.demo.contract.Destructible;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
