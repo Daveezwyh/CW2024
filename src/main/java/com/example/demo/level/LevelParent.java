@@ -296,7 +296,7 @@ public abstract class LevelParent extends Observable {
 		stopGame();
 		levelView.showWinImage();
 
-		PauseTransition pause = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
 		pause.setOnFinished(event -> {
 			setChanged();
 			notifyObservers(new LevelNotification(
@@ -311,7 +311,7 @@ public abstract class LevelParent extends Observable {
 		stopGame();
 		levelView.showGameOverImage();
 
-		PauseTransition pause = new PauseTransition(Duration.seconds(2));
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
 		pause.setOnFinished(event -> {
 			setChanged();
 			notifyObservers(new LevelNotification(

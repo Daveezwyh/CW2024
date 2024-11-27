@@ -20,6 +20,7 @@ public class Controller implements Observer {
 	private final Stage stage;
 	private LevelParent currentLevel;
 	private Scene mainMenuScene;
+	private Scene gameInfoScene;
 	private Scene gameOverScene;
 	private GameOverController gameOverController;
 	private GameScore gameScore;
@@ -54,6 +55,26 @@ public class Controller implements Observer {
 			}
 		}
 		stage.setScene(mainMenuScene);
+	}
+
+	public void showGameInfo() {
+		if (gameInfoScene == null) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameInfo.fxml"));
+				Parent menuRoot = loader.load();
+				gameInfoScene = new Scene(menuRoot, stage.getWidth(), stage.getHeight());
+				gameInfoScene.getStylesheets().add(
+						Objects.requireNonNull(getClass().getResource("/com/example/demo/styles/GameInfo.css")).toExternalForm()
+				);
+
+				GameInfoController infoController = loader.getController();
+				infoController.setMainController(this);
+			} catch (Exception e) {
+				showError(e);
+				return;
+			}
+		}
+		stage.setScene(gameInfoScene);
 	}
 
 	public void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,

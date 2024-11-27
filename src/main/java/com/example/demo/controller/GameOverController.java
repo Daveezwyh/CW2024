@@ -34,7 +34,7 @@ public class GameOverController {
     }
     private void updateBackgroundImage() {
         try {
-            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + "com/example/demo/images/background1.jpg")));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/demo/images/background1.jpg")));
             backgroundImageView.setImage(image);
         } catch (Exception e) {
             mainController.showError(e);

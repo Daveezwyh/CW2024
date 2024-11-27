@@ -1,0 +1,58 @@
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: #4d73ff;
+    -fx-font-size: 20px;
+    -fx-pref-height: 26;
+    -fx-pref-width: 329;
+    -fx-background-radius: 5;
+    -fx-border-color: #4d73ff;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.button:hover {
+    -fx-background-color: #4d73ff;
+    -fx-text-fill: white;
+    -fx-border-color: #4d73ff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 4);
+    -fx-transition: all 0.3s ease;
+}
+
+#headerText {
+    -fx-font-size: 24px;
+    -fx-fill: white;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333; /* Dark text */
+}
+
+VBox {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+#sectionHeader {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555; /* Medium gray text */
+}
+
+#regularText {
+    -fx-font-size: 14px;
+    -fx-text-fill: #444; /* Standard gray text */
+}
+
+#indentedText {
+    -fx-font-size: 14px;
+    -fx-text-fill: #444;
+    -fx-padding: 0 0 0 20px; /* Indented text */
+}
+
+#backButton {
+    -fx-pref-height: 26px;
+    -fx-pref-width: 329px;
+    -fx-font-size: 20px;
+}
+
+#acceptButton:hover {
+    -fx-background-color: #005a9e; /* Darker blue on hover */
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="750" prefWidth="1300" stylesheets="@../styles/GameInfo.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameInfoController">
+   <children>
+      <ImageView fx:id="backgroundImageView" fitHeight="750" fitWidth="1300" pickOnBounds="true" preserveRatio="false" />
+      <!-- Header -->
+      <Text fx:id="headerText" layoutX="105.0" layoutY="56.0" text="Game Information" />
+
+      <!-- ScrollPane for Game Information -->
+      <ScrollPane layoutX="106.0" layoutY="80.0" prefHeight="550.0" prefWidth="1083.0">
+         <content>
+            <VBox fx:id="contentBox" prefHeight="614.0" prefWidth="827.0">
+               <!-- Game Level Section -->
+               <Text fx:id="sectionHeader" text="Game Level:" wrappingWidth="827.0" />
+               <Text fx:id="regularText" text="- This game has 4 levels" wrappingWidth="996.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" />
+                  </VBox.margin>
+               </Text>
+               <Text fx:id="regularText" text="- Level One" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• 50 kills to advance" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• Consists of all small planes with 1 HP" wrappingWidth="827.0" />
+               <Text fx:id="regularText" text="- Level Two" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• 50 kills to advance" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• Mix of small planes (1 HP) and big planes (5 HP)" wrappingWidth="827.0" />
+               <Text fx:id="regularText" text="- Level Three" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• 30 kills to advance" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• Consists of all big planes with 5 HP" wrappingWidth="827.0" />
+               <Text fx:id="regularText" text="- Level Boss" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• 1 boss to win" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• Boss has 100 HP" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="• Boss may activate shield to protect against damage" wrappingWidth="827.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" />
+                  </VBox.margin>
+               </Text>
+
+               <!-- Game Score Section -->
+               <Text fx:id="sectionHeader" text="Game Score:" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Move closer to the enemy spawn area to get higher score" wrappingWidth="827.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" />
+                  </VBox.margin>
+               </Text>
+
+               <!-- Restore HP Section -->
+               <Text fx:id="sectionHeader" text="Restore HP:" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- HP heart will spawn in random position" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Hit the HP heart to restore your health" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- The lower your health the higher the chance HP will spawn" wrappingWidth="827.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" />
+                  </VBox.margin>
+               </Text>
+            </VBox>
+         </content>
+      </ScrollPane>
+
+                        <!-- Back Button -->
+      <Button fx:id="backButton" layoutX="484.0" layoutY="654.0" onAction="#backMainMenu" text="Back" />
+   </children>
+</AnchorPane>

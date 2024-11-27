@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameOverController">
+<StackPane prefHeight="750" prefWidth="1300" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.GameOverController">
     <ImageView fx:id="backgroundImageView" fitHeight="750" fitWidth="1300" />
     <HBox alignment="CENTER" prefHeight="491.0" prefWidth="1300.0" stylesheets="@../styles/GameOver.css">
         <children>
