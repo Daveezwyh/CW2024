@@ -2,6 +2,8 @@ package com.example.demo.misc;
 
 public class GameScore {
     private int score;
+    private int lastIncrement;
+
     public GameScore(int initialScore){
         this.score = initialScore;
     }
@@ -13,6 +15,11 @@ public class GameScore {
     }
 
     public void increaseScoreBy(int increment){
+        this.lastIncrement = increment;
         this.score += increment;
+    }
+
+    public int getLastIncrement(){
+        return lastIncrement;
     }
 }

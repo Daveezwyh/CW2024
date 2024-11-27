@@ -86,7 +86,8 @@ public abstract class LevelParent extends Observable {
 		initializeBackground();
 		initializeFriendlyUnits();
 		levelView.showHeartDisplay()
-				.showKillCounter();
+				.showKillCounter()
+				.showGameScoreCounter();
 		return scene;
 	}
 
@@ -277,7 +278,8 @@ public abstract class LevelParent extends Observable {
 
 	protected void updateLevelView() {
 		levelView.updateHearts(user.getHealth())
-				.updateKillCount(user.getNumberOfKills());
+				.updateKillCount(user.getNumberOfKills())
+				.updateGameScore(gameScore);
 	}
 
 	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {

@@ -13,11 +13,14 @@ public class LevelView {
 	private static final int LOSS_SCREEN_Y_POSISITION = 150;
 	private static final double KILL_COUNTER_X_POSITION = 250;
 	private static final double KILL_COUNTER_Y_POSITION = 30;
+	private static final double GAMESCORE_COUNTER_X_POSITION = 450;
+	private static final double GAMESCORE_COUNTER_Y_POSITION = 30;
 	private final Group root;
 	private final WinImage winImage;
 	private final GameOverImage gameOverImage;
 	private final HeartDisplay heartDisplay;
 	private final KillCounter killCounter;
+	private final GameScoreCounter gameScoreCounter;
 	private final PauseOverlay pauseOverlay;
 
 	public LevelView(Group root, int heartsToDisplay, int killsToAdvance) {
@@ -26,6 +29,7 @@ public class LevelView {
 		this.winImage = new WinImage(WIN_IMAGE_X_POSITION, WIN_IMAGE_Y_POSITION);
 		this.gameOverImage = new GameOverImage(LOSS_SCREEN_X_POSITION, LOSS_SCREEN_Y_POSISITION);
 		this.killCounter = new KillCounter(KILL_COUNTER_X_POSITION, KILL_COUNTER_Y_POSITION, killsToAdvance);
+		this.gameScoreCounter = new GameScoreCounter(GAMESCORE_COUNTER_X_POSITION, GAMESCORE_COUNTER_Y_POSITION);
 		this.pauseOverlay = new PauseOverlay(root);
 	}
 	
@@ -39,6 +43,10 @@ public class LevelView {
 		return this;
 	}
 
+	public LevelView showGameScoreCounter() {
+		root.getChildren().add(gameScoreCounter.getGameScoreCounterText());
+		return this;
+	}
 	public void showWinImage() {
 		root.getChildren().add(winImage);
 		winImage.showWinImage();
@@ -71,6 +79,11 @@ public class LevelView {
 	public LevelView updateKillCount(int killCount){
 		killCounter.setCurrentKills(killCount)
 				.updateKillCounterText();
+		return this;
+	}
+
+	public LevelView updateGameScore(GameScore gameScore){
+		gameScoreCounter.updateGameScoreCounterText(gameScore);
 		return this;
 	}
 }
