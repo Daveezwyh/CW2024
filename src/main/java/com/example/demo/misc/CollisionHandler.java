@@ -1,6 +1,7 @@
 package com.example.demo.misc;
 
 import com.example.demo.actor.ActiveActorDestructible;
+import com.example.demo.actor.Boss;
 import com.example.demo.actor.UserPlane;
 
 import java.util.List;
@@ -21,6 +22,27 @@ public class CollisionHandler {
                     userProjectile.takeDamage();
                     enemyUnit.takeDamage();
 
+                    scoreIndex += GameScoreCalculator.calculateUserScoreByPosition(userPlane);
+                }
+            }
+        }
+
+        return scoreIndex;
+    }
+
+    public static int handleUserProjectileBossCollisions(
+            UserPlane userPlane,
+            List<ActiveActorDestructible> userProjectiles,
+            Boss boss)
+    {
+        int scoreIndex = 0;
+
+        for (ActiveActorDestructible userProjectile : userProjectiles) {
+            if (userProjectile.getBoundsInParent().intersects(boss.getBoundsInParent())) {
+                userProjectile.takeDamage();
+                boss.takeDamage();
+
+                if(!boss.getIsShielded()){
                     scoreIndex += GameScoreCalculator.calculateUserScoreByPosition(userPlane);
                 }
             }

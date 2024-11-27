@@ -28,7 +28,7 @@ public abstract class LevelParent extends Observable {
 	private final ImageView background;
 	private final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
-	private final List<ActiveActorDestructible> userProjectiles;
+	protected final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
 	protected final List<ActiveActorDestructible> healthPoints;
 	private int currentNumberOfEnemies;
@@ -256,9 +256,13 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void handleGenericCollisions(){
-		int scoreIncrement = CollisionHandler.handleUserProjectileCollisions(user, userProjectiles, enemyUnits);
 		CollisionHandler.handleEnemyProjectileCollisions(enemyProjectiles, friendlyUnits);
 		CollisionHandler.handlePlaneCollisions(friendlyUnits, enemyUnits);
+		handleScoreableCollisions();
+	}
+
+	protected void handleScoreableCollisions(){
+		int scoreIncrement = CollisionHandler.handleUserProjectileCollisions(user, userProjectiles, enemyUnits);
 		gameScore.increaseScoreBy(scoreIncrement);
 	}
 

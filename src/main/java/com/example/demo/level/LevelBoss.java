@@ -3,6 +3,7 @@ package com.example.demo.level;
 import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.Boss;
 import com.example.demo.actor.UserPlane;
+import com.example.demo.misc.CollisionHandler;
 
 public class LevelBoss extends LevelParent {
 
@@ -56,6 +57,12 @@ public class LevelBoss extends LevelParent {
 	@Override
 	protected void animateBackground() {
     }
+
+	@Override
+	protected void handleScoreableCollisions(){
+		int scoreIncrement = CollisionHandler.handleUserProjectileBossCollisions(getUser(), userProjectiles, boss);
+		gameScore.increaseScoreBy(scoreIncrement);
+	}
 
 	@Override
 	protected void updateLevelView(){
