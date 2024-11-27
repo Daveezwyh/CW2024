@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.level.LevelSelector;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-
 import java.util.Objects;
 
 public class GameOverController {
@@ -24,11 +22,8 @@ public class GameOverController {
     @FXML
     private Text gameOverText;
     @FXML
-    private Button restartButton;
-    @FXML
-    private Button mainMenuButton;
-    @FXML
-    private Button exitButton;
+    private Text gameScoreText;
+
 
     public void setMainController(Controller mainController) {
         this.mainController = mainController;
@@ -91,6 +86,9 @@ public class GameOverController {
     }
     private void setText(String text){
         gameOverText.setText(text);
+    }
+    public void setGameScore(int gameScore){
+        gameScoreText.setText("Score: " + gameScore);
     }
     public void setMode(GameOverCase gameOverCase) {
         switch (gameOverCase) {

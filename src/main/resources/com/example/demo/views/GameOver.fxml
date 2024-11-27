@@ -20,6 +20,7 @@
 
             <VBox alignment="CENTER" prefHeight="750.0" prefWidth="423.0" spacing="20">
                 <Text fx:id="gameOverText" text="Game Over" textAlignment="CENTER" wrappingWidth="396.81317138671875" />
+                <Text fx:id="gameScoreText" text="Score" textAlignment="CENTER" wrappingWidth="396.81317138671875" />
                 <Button fx:id="restartButton" onAction="#onRestartButtonClicked" text="Restart" />
                 <Button fx:id="mainMenuButton" onAction="#onMainMenuButtonClicked" text="Main Menu" />
                 <Button fx:id="exitButton" onAction="#onExitButtonClicked" text="Exit" />

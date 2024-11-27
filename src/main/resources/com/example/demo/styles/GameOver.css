@@ -28,6 +28,14 @@
     -fx-margin: 40px 0 10px 0;
 }
 
+#gameScoreText {
+    -fx-fill: yellow;
+    -fx-font-size: 24px;
+    -fx-text-alignment: center;
+    -fx-wrapping-width: 396.813px;
+    -fx-margin: 40px 0 10px 0;
+}
+
 .button {
     -fx-background-color: white;
     -fx-text-fill: #4d73ff;

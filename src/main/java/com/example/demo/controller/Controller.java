@@ -100,6 +100,7 @@ public class Controller implements Observer {
 				gameOverController.setMode(GameOverController.GameOverCase.LOSE);
 			}
 		}
+		gameOverController.setGameScore(gameScore.getScore());
 
 		gameScore.resetScore();
 		stage.setScene(gameOverScene);
