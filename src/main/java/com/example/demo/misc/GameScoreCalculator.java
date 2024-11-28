@@ -8,10 +8,6 @@ public class GameScoreCalculator {
         double lowerBound = userPlane.getXLowerBound();
         double upperBound = userPlane.getXUpperBound();
 
-        if (upperBound >= lowerBound) {
-            throw new IllegalArgumentException("Invalid bounds: upperBound must be less than lowerBound.");
-        }
-
         double normalizedX = (x - upperBound) / (lowerBound - upperBound);
         int addition = (int) Math.max(0, Math.min(5, normalizedX * 5));
 

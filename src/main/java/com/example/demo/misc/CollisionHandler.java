@@ -40,9 +40,9 @@ public class CollisionHandler {
         for (ActiveActorDestructible userProjectile : userProjectiles) {
             if (userProjectile.getBoundsInParent().intersects(boss.getBoundsInParent())) {
                 userProjectile.takeDamage();
-                boss.takeDamage();
 
                 if(!boss.getIsShielded()){
+                    boss.takeDamage();
                     scoreIndex += GameScoreCalculator.calculateUserScoreByPosition(userPlane);
                 }
             }

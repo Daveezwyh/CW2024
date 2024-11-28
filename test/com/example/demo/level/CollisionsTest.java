@@ -49,6 +49,31 @@ class CollisionsTest {
     }
 
     @Test
+    void testUserProjectileCollisionsBossShield() {
+        UserPlane userPlane = mock(UserPlane.class);
+
+        Boss boss = mock(Boss.class);
+
+        when(boss.getIsShielded()).thenReturn(true);
+        when(boss.getHealth()).thenReturn(100);
+
+        UserProjectile userProjectile = mock(UserProjectile.class);
+        userProjectiles.add(userProjectile);
+
+        Bounds bossBounds = mock(Bounds.class);
+        Bounds projectileBounds = mock(Bounds.class);
+
+        when(boss.getBoundsInParent()).thenReturn(bossBounds);
+        when(userProjectile.getBoundsInParent()).thenReturn(projectileBounds);
+        when(projectileBounds.intersects(bossBounds)).thenReturn(true);
+
+        CollisionHandler.handleUserProjectileBossCollisions(userPlane, userProjectiles, boss);
+
+        verify(userProjectile, times(1)).takeDamage();
+        verify(boss, times(0)).takeDamage();
+    }
+
+    @Test
     void testEnemyProjectileCollisions(){
         EnemyProjectile enemyProjectile = mock(EnemyProjectile.class);
         enemyProjectiles.add(enemyProjectile);
