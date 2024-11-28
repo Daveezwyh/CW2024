@@ -1,6 +1,7 @@
 package com.example.demo.level;
 
 import com.example.demo.misc.*;
+import com.example.demo.util.GameScore;
 import javafx.scene.Group;
 
 public class LevelView {

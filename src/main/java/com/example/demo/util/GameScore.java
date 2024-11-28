@@ -1,4 +1,4 @@
-package com.example.demo.misc;
+package com.example.demo.util;
 
 public class GameScore {
     private int score;

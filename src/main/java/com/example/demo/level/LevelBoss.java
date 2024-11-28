@@ -1,9 +1,8 @@
 package com.example.demo.level;
 
-import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.Boss;
 import com.example.demo.actor.UserPlane;
-import com.example.demo.misc.CollisionHandler;
+import com.example.demo.util.CollisionHandler;
 
 public class LevelBoss extends LevelParent {
 

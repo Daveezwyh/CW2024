@@ -1,7 +1,7 @@
 package com.example.demo.level;
 
 import com.example.demo.actor.*;
-import com.example.demo.misc.CollisionHandler;
+import com.example.demo.util.CollisionHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.ArrayList;

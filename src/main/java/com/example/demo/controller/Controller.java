@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
-import com.example.demo.misc.GameScore;
+import com.example.demo.util.GameScore;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
