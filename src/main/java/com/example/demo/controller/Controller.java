@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
-
 import com.example.demo.misc.GameScore;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -17,6 +16,7 @@ import com.example.demo.level.LevelParent;
 import com.example.demo.level.LevelNotification;
 
 public class Controller implements Observer {
+
 	private final Stage stage;
 	private LevelParent currentLevel;
 	private Scene mainMenuScene;
@@ -31,8 +31,7 @@ public class Controller implements Observer {
 	}
 
 	public void launchGame() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
-	{
+			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		showMainMenu();
 		stage.show();
 	}
@@ -78,72 +77,22 @@ public class Controller implements Observer {
 	}
 
 	public void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
-	{
-			if(currentLevel != null){
-				currentLevel.stopGame();
-				cleanUp();
-			}
-
-			Class<?> myClass = Class.forName(className);
-			Constructor<?> constructor = myClass.getConstructor(double.class, double.class);
-			currentLevel = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth());
-			currentLevel.addObserver(this);
-			currentLevel.addGameScore(gameScore);
-
-			Scene scene = currentLevel.initializeScene();
-			stage.setScene(scene);
-
-			currentLevel.startGame();
-	}
-	private void cleanUp(){
-		currentLevel.deleteObserver(this);
-		currentLevel = null;
-		stage.setScene(null);
-	}
-	private void handleWinOrLoseGame(LevelNotification.Action wlcase) throws Exception {
-		if (gameOverScene == null || gameOverController == null) {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
-			Parent overlayRoot = loader.load();
-			gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
-			gameOverScene.getStylesheets().add(
-					Objects.requireNonNull(getClass().getResource("/com/example/demo/styles/GameOver.css")).toExternalForm()
-			);
-			gameOverController = loader.getController();
-			gameOverController.setMainController(this);
+			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		if (currentLevel != null) {
+			currentLevel.stopGame();
+			cleanUp();
 		}
 
-		switch (wlcase) {
-			case WIN_GAME -> {
-				gameOverController.setMode(GameOverController.GameOverCase.WIN);
-			}
-			case LOSE_GAME -> {
-				gameOverController.setMode(GameOverController.GameOverCase.LOSE);
-			}
-		}
-		gameOverController.setGameScore(gameScore.getScore());
+		Class<?> myClass = Class.forName(className);
+		Constructor<?> constructor = myClass.getConstructor(double.class, double.class);
+		currentLevel = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth());
+		currentLevel.addObserver(this);
+		currentLevel.addGameScore(gameScore);
 
-		gameScore.resetScore();
-		stage.setScene(gameOverScene);
-	}
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (arg1 instanceof LevelNotification notification) {
-			try {
-				LevelNotification.Action levelNotificationAction = notification.nextAction();
-				switch (levelNotificationAction) {
-					case NEXT_LEVEL -> {
-						String levelName = notification.levelName();
-						goToLevel(levelName);
-					}
-					case WIN_GAME, LOSE_GAME -> handleWinOrLoseGame(levelNotificationAction);
-                }
-			} catch (Exception e) {
-				showError(e);
-			}
-		} else {
-			showError(new Exception("Unexpected notification type received."));
-		}
+		Scene scene = currentLevel.initializeScene();
+		stage.setScene(scene);
+
+		currentLevel.startGame();
 	}
 
 	public Stage getStage() {
@@ -164,5 +113,52 @@ public class Controller implements Observer {
 			alert.setContentText(exception.getMessage() != null ? exception.getMessage() : "No details available.");
 			alert.showAndWait();
 		});
+	}
+
+	private void cleanUp() {
+		currentLevel.deleteObserver(this);
+		currentLevel = null;
+		stage.setScene(null);
+	}
+
+	private void handleWinOrLoseGame(LevelNotification.Action wlcase) throws Exception {
+		if (gameOverScene == null || gameOverController == null) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
+			Parent overlayRoot = loader.load();
+			gameOverScene = new Scene(overlayRoot, stage.getWidth(), stage.getHeight());
+			gameOverScene.getStylesheets().add(
+					Objects.requireNonNull(getClass().getResource("/com/example/demo/styles/GameOver.css")).toExternalForm()
+			);
+			gameOverController = loader.getController();
+			gameOverController.setMainController(this);
+		}
+
+		switch (wlcase) {
+			case WIN_GAME -> gameOverController.setMode(GameOverController.GameOverCase.WIN);
+			case LOSE_GAME -> gameOverController.setMode(GameOverController.GameOverCase.LOSE);
+		}
+		gameOverController.setGameScore(gameScore.getScore());
+		gameScore.resetScore();
+		stage.setScene(gameOverScene);
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if (arg1 instanceof LevelNotification notification) {
+			try {
+				LevelNotification.Action levelNotificationAction = notification.nextAction();
+				switch (levelNotificationAction) {
+					case NEXT_LEVEL -> {
+						String levelName = notification.levelName();
+						goToLevel(levelName);
+					}
+					case WIN_GAME, LOSE_GAME -> handleWinOrLoseGame(levelNotificationAction);
+				}
+			} catch (Exception e) {
+				showError(e);
+			}
+		} else {
+			showError(new Exception("Unexpected notification type received."));
+		}
 	}
 }
