@@ -1,20 +1,25 @@
 package com.example.demo.controller;
 
+import com.example.demo.level.LevelNotification;
+import com.example.demo.level.LevelParent;
+import com.example.demo.util.GameScore;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
-import com.example.demo.util.GameScore;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.Parent;
-import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
-import com.example.demo.level.LevelParent;
-import com.example.demo.level.LevelNotification;
 
+/**
+ * The Controller class manages the application's main flow, handling game levels, navigation,
+ * and interactions between game components.
+ */
 public class Controller implements Observer {
 
 	private final Stage stage;
@@ -25,17 +30,36 @@ public class Controller implements Observer {
 	private GameOverController gameOverController;
 	private GameScore gameScore;
 
+	/**
+	 * Constructs a Controller with the specified stage.
+	 *
+	 * @param stage the main stage of the application.
+	 */
 	public Controller(Stage stage) {
 		this.stage = stage;
 		this.gameScore = new GameScore(0);
 	}
 
+	/**
+	 * Launches the game by displaying the main menu and making the primary stage visible.
+	 *
+	 * @throws ClassNotFoundException if a required class cannot be found during game initialization.
+	 * @throws NoSuchMethodException if a required method or constructor is missing.
+	 * @throws SecurityException if access to a method or constructor is denied.
+	 * @throws InstantiationException if an instantiation attempt fails (e.g., the class is abstract).
+	 * @throws IllegalAccessException if a method or constructor is inaccessible.
+	 * @throws IllegalArgumentException if an illegal argument is provided during initialization.
+	 * @throws InvocationTargetException if an exception occurs while invoking a method or constructor.
+	 */
 	public void launchGame() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		showMainMenu();
 		stage.show();
 	}
 
+	/**
+	 * Displays the main menu.
+	 */
 	public void showMainMenu() {
 		if (mainMenuScene == null) {
 			try {
@@ -56,6 +80,9 @@ public class Controller implements Observer {
 		stage.setScene(mainMenuScene);
 	}
 
+	/**
+	 * Displays the game information screen.
+	 */
 	public void showGameInfo() {
 		if (gameInfoScene == null) {
 			try {
@@ -76,6 +103,18 @@ public class Controller implements Observer {
 		stage.setScene(gameInfoScene);
 	}
 
+	/**
+	 * Navigates to a specified level by dynamically loading the class and initializing it.
+	 *
+	 * @param className the fully qualified name of the class representing the level.
+	 * @throws ClassNotFoundException if the specified class cannot be located.
+	 * @throws NoSuchMethodException if a matching constructor cannot be found for the level.
+	 * @throws SecurityException if access to the constructor is denied.
+	 * @throws InstantiationException if the level class cannot be instantiated (e.g., it's abstract).
+	 * @throws IllegalAccessException if the constructor is inaccessible.
+	 * @throws IllegalArgumentException if an illegal argument is passed to the constructor.
+	 * @throws InvocationTargetException if the constructor invocation causes an exception.
+	 */
 	public void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if (currentLevel != null) {
@@ -95,10 +134,20 @@ public class Controller implements Observer {
 		currentLevel.startGame();
 	}
 
+	/**
+	 * Gets the main stage of the application.
+	 *
+	 * @return the stage.
+	 */
 	public Stage getStage() {
 		return stage;
 	}
 
+	/**
+	 * Handles errors by displaying an alert and stopping the game.
+	 *
+	 * @param exception the exception to handle.
+	 */
 	public void showError(Exception exception) {
 		exception.printStackTrace();
 
@@ -115,12 +164,21 @@ public class Controller implements Observer {
 		});
 	}
 
+	/**
+	 * Cleans up the current level and resets the scene.
+	 */
 	private void cleanUp() {
 		currentLevel.deleteObserver(this);
 		currentLevel = null;
 		stage.setScene(null);
 	}
 
+	/**
+	 * Handles the end-of-game scenario by showing the appropriate game-over screen.
+	 *
+	 * @param wlcase the win or lose case.
+	 * @throws Exception if the game-over screen fails to load.
+	 */
 	private void handleWinOrLoseGame(LevelNotification.Action wlcase) throws Exception {
 		if (gameOverScene == null || gameOverController == null) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/views/GameOver.fxml"));
@@ -142,16 +200,19 @@ public class Controller implements Observer {
 		stage.setScene(gameOverScene);
 	}
 
+	/**
+	 * Handles updates received from observed objects.
+	 *
+	 * @param arg0 the observable object.
+	 * @param arg1 the update argument.
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (arg1 instanceof LevelNotification notification) {
 			try {
 				LevelNotification.Action levelNotificationAction = notification.nextAction();
 				switch (levelNotificationAction) {
-					case NEXT_LEVEL -> {
-						String levelName = notification.levelName();
-						goToLevel(levelName);
-					}
+					case NEXT_LEVEL -> goToLevel(notification.levelName());
 					case WIN_GAME, LOSE_GAME -> handleWinOrLoseGame(levelNotificationAction);
 				}
 			} catch (Exception e) {
