@@ -27,10 +27,11 @@ public class GameScore {
     }
 
     /**
-     * Resets the score to zero.
+     * Resets the score and last increment to zero.
      */
     public void resetScore() {
         this.score = 0;
+        this.lastIncrement = 0;
     }
 
     /**
@@ -39,7 +40,7 @@ public class GameScore {
      * @param increment the amount to add to the score.
      */
     public void increaseScoreBy(int increment) {
-        this.lastIncrement = increment;
+        if(increment > 0) this.lastIncrement = increment;
         this.score += increment;
     }
 

@@ -77,6 +77,17 @@ public class GameScoreCounter {
      * @return the formatted game score string.
      */
     private String formatGameScoreCounterText() {
-        return "Score: " + gameScore.getScore();
+        return "Score: " + gameScore.getScore() + formatGameScoreLastIncrementText();
+    }
+
+    /**
+     * Formats the last increment in the score to display alongside the total score.
+     *
+     * @return the formatted last increment string.
+     */
+    private String formatGameScoreLastIncrementText() {
+        int lastIncrement = gameScore.getLastIncrement();
+
+        return "  +" + gameScore.getLastIncrement();
     }
 }
