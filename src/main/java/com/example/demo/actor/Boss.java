@@ -15,7 +15,7 @@ public class Boss extends FighterPlane {
 	private static final double INITIAL_X_POSITION = 1000.0;
 	private static final double INITIAL_Y_POSITION = 400;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
-	private static final double BOSS_FIRE_RATE = .05;
+	private static final double BOSS_FIRE_RATE = .08;
 	private static final double BOSS_SHIELD_PROBABILITY = 0.1;
 	private static final int IMAGE_HEIGHT = 120;
 	private static final int VERTICAL_VELOCITY = 8;
@@ -26,6 +26,9 @@ public class Boss extends FighterPlane {
 	private static final int Y_POSITION_UPPER_BOUND = -10;
 	private static final int Y_POSITION_LOWER_BOUND = 600;
 	private static final int MAX_FRAMES_WITH_SHIELD = 50;
+	private static final int MAX_FIRE_DEACTIVATION_FRAMES = 100;
+	private boolean isFireDeactivated;
+	private int fireDeactivationFrames;
 
 	private final List<Integer> movePattern;
 	private boolean isShielded;
@@ -44,6 +47,8 @@ public class Boss extends FighterPlane {
 		indexOfCurrentMove = 0;
 		framesWithShieldActivated = 0;
 		isShielded = false;
+		isFireDeactivated = false;
+		fireDeactivationFrames = 0;
 		initializeMovePattern();
 	}
 
@@ -69,6 +74,7 @@ public class Boss extends FighterPlane {
 	public void updateActor() {
 		updatePosition();
 		updateShield();
+		updateFireState();
 	}
 
 	/**
@@ -78,6 +84,9 @@ public class Boss extends FighterPlane {
 	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {
+		if (isFireDeactivated) {
+			return null; // Prevent firing when deactivated
+		}
 		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
 	}
 
@@ -101,6 +110,24 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
+	 * Checks if the Boss's fire state is deactivated.
+	 *
+	 * @return {@code true} if the Boss's fire state is deactivated, otherwise {@code false}.
+	 */
+	public boolean getIsFireDeactivated() {
+		return isFireDeactivated;
+	}
+
+	/**
+	 * Deactivates the Boss's ability to fire projectiles.
+	 * Resets the frame counter tracking the duration of the fire deactivation.
+	 */
+	public void deactivateFire() {
+		isFireDeactivated = true;
+		fireDeactivationFrames = 0;
+	}
+
+	/**
 	 * Initializes the Boss's movement pattern with random shuffling.
 	 */
 	private void initializeMovePattern() {
@@ -120,6 +147,19 @@ public class Boss extends FighterPlane {
 		if (isShielded) framesWithShieldActivated++;
 		else if (shieldShouldBeActivated()) activateShield();
 		if (shieldExhausted()) deactivateShield();
+	}
+
+	/**
+	 * Updates the Boss's firing state based on the duration of fire deactivation.
+	 * If the fire has been deactivated for the maximum allowed frames, the Boss can fire again.
+	 */
+	private void updateFireState() {
+		if (isFireDeactivated) {
+			fireDeactivationFrames++;
+			if (fireDeactivationFrames >= MAX_FIRE_DEACTIVATION_FRAMES) {
+				isFireDeactivated = false; // Reactivate firing
+			}
+		}
 	}
 
 	/**

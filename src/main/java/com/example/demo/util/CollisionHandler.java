@@ -123,7 +123,7 @@ public class CollisionHandler {
     public static void handleUserHealthPointCollisions(
             int playerInitHealth,
             UserPlane userPlane,
-            List<ActiveActorDestructible> healthPoints
+            List<? extends ActiveActorDestructible> healthPoints
     ) {
         for (ActiveActorDestructible healthPoint : healthPoints) {
             if (userPlane.getBoundsInParent().intersects(healthPoint.getBoundsInParent())) {
@@ -131,6 +131,40 @@ public class CollisionHandler {
                     userPlane.repairDamage();
                 }
                 healthPoint.destroy();
+            }
+        }
+    }
+
+    /**
+     * Handles collisions between the user's plane and boss fire deactivators.
+     *
+     * @param userPlane        the user's plane.
+     * @param boss             the boss unit whose fire needs to be deactivated.
+     * @param fireDeactivators the list of fire deactivator objects.
+     *
+     * If a collision is detected between the user's plane and any fire deactivator:
+     * <ul>
+     *     <li>The boss's fire is deactivated.</li>
+     *     <li>All fire deactivators involved in the collision are destroyed.</li>
+     * </ul>
+     */
+    public static void handleUserBossFireDeactivatorCollisions(
+            UserPlane userPlane,
+            Boss boss,
+            List<? extends ActiveActorDestructible> fireDeactivators
+    ) {
+        boolean collided = false;
+
+        for (ActiveActorDestructible fireDeactivator : fireDeactivators) {
+            if (userPlane.getBoundsInParent().intersects(fireDeactivator.getBoundsInParent())) {
+                collided = true;
+                boss.deactivateFire();
+            }
+        }
+
+        if(collided){
+            for (ActiveActorDestructible fireDeactivator : fireDeactivators) {
+                fireDeactivator.destroy();
             }
         }
     }

@@ -128,15 +128,6 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 	}
 
 	/**
-	 * Retrieves the timestamp when the actor was created.
-	 *
-	 * @return the creation timestamp of the actor.
-	 */
-	public long getCreatedTimeStamp() {
-		return 0;
-	}
-
-	/**
 	 * Updates the bounding box to match the actor's current position and size.
 	 */
 	protected void updateBoundingBox() {

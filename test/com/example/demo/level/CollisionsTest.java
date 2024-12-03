@@ -15,6 +15,8 @@ class CollisionsTest {
     private List<ActiveActorDestructible> enemyUnits;
     private List<ActiveActorDestructible> friendlyUnits;
     private List<ActiveActorDestructible> healthPoints;
+    private List<ActiveActorDestructible> fireDeactivators;
+
     @BeforeEach
     void setup() {
         userProjectiles = new ArrayList<>();
@@ -173,5 +175,26 @@ class CollisionsTest {
 
         verify(friendlyUnit, times(1)).repairDamage();
         verify(healthPoint, times(1)).destroy();
+    }
+
+    @Test
+    void testUserBossFireDeactivatorCollisions(){
+        UserPlane userPlane = mock(UserPlane.class);
+        Boss boss = mock(Boss.class);
+
+        ActiveActorDestructible fireDeactivator = mock(FireDeactivator.class);
+        List<ActiveActorDestructible> fireDeactivators = new ArrayList<>();
+        fireDeactivators.add(fireDeactivator);
+
+        Bounds userBounds = mock(Bounds.class);
+        Bounds deactivatorBounds = mock(Bounds.class);
+
+        when(userPlane.getBoundsInParent()).thenReturn(userBounds);
+        when(fireDeactivator.getBoundsInParent()).thenReturn(deactivatorBounds);
+        when(userBounds.intersects(deactivatorBounds)).thenReturn(true);
+
+        CollisionHandler.handleUserBossFireDeactivatorCollisions(userPlane, boss, fireDeactivators);
+
+        verify(boss, times(1)).deactivateFire();
     }
 }

@@ -6,17 +6,18 @@ import com.example.demo.util.CollisionHandler;
 
 /**
  * Represents the second level of the game.
- * Introduces varying enemy types and health point mechanics.
+ * This level introduces diverse enemy types and health point mechanics.
+ * Players must defeat enemies and collect health points while advancing toward the kill target.
  */
 public class LevelTwo extends LevelParent implements EnemyVariation {
 
     /**
-     * Path to the background image for the level.
+     * Path to the background image used for this level.
      */
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
 
     /**
-     * Total number of enemies allowed in the level at any time.
+     * Maximum number of enemies that can exist simultaneously in the level.
      */
     private static final int TOTAL_ENEMIES = 4;
 
@@ -26,12 +27,12 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final int KILLS_TO_ADVANCE = 50;
 
     /**
-     * Probability of spawning an enemy on each frame.
+     * Probability of spawning a new enemy on each frame.
      */
     private static final double ENEMY_SPAWN_PROBABILITY = 0.2;
 
     /**
-     * Initial health of the player's character.
+     * Initial health of the player's character at the start of the level.
      */
     private static final int PLAYER_INITIAL_HEALTH = 5;
 
@@ -41,15 +42,20 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     private static final double HP_SPAWN_PROBABILITY = 0.01;
 
     /**
-     * Level selector to manage navigation to the next level.
+     * Duration (in seconds) for which a health point remains active after spawning.
+     */
+    private final int HP_LINGER_SEC = 5;
+
+    /**
+     * Manages level transitions for navigating to the next level.
      */
     private final LevelSelector levelSelector;
 
     /**
-     * Constructs the second level with the given screen dimensions.
+     * Constructs the second level with the specified screen dimensions.
      *
-     * @param screenHeight the height of the screen.
-     * @param screenWidth  the width of the screen.
+     * @param screenHeight the height of the game screen.
+     * @param screenWidth  the width of the game screen.
      */
     public LevelTwo(double screenHeight, double screenWidth) {
         super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
@@ -57,7 +63,9 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
 
     /**
-     * Checks whether the game is over due to the player's destruction or if the kill target has been reached.
+     * Checks whether the game is over.
+     * The game ends if the player's character is destroyed, resulting in a loss,
+     * or if the required kill target is reached, advancing to the next level.
      */
     @Override
     protected void checkIfGameOver() {
@@ -70,6 +78,7 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
 
     /**
      * Initializes the player's character and adds it to the game scene.
+     * If the player's bounding box is visible, it is also added to the scene.
      */
     @Override
     protected void initializeFriendlyUnits() {
@@ -82,8 +91,8 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
 
     /**
-     * Spawns enemy units based on the current number of enemies and a spawn probability.
-     * Includes logic for generating different enemy types.
+     * Spawns enemy units dynamically based on the current number of enemies and a random spawn probability.
+     * Includes logic for creating different enemy types.
      */
     @Override
     protected void spawnEnemyUnits() {
@@ -104,28 +113,32 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
 
     /**
-     * Spawns health points based on the player's current health and a dynamic spawn probability.
+     * Spawns transient objects such as health points.
+     * Adjusts the spawn probability dynamically based on the player's current health.
      */
     @Override
-    protected void spawnHealthPoints() {
+    protected void spawnTransientObjects() {
+        spawnHealthPoints();
+    }
+
+    /**
+     * Spawns health points based on the player's current health and an adjusted spawn probability.
+     * Health points are more likely to spawn when the player's health is lower.
+     */
+    private void spawnHealthPoints() {
         UserPlane user = getUser();
         int currentHealth = user.getHealth();
         double adjustedProbability = (double) (PLAYER_INITIAL_HEALTH - currentHealth) / PLAYER_INITIAL_HEALTH * HP_SPAWN_PROBABILITY;
 
         if (currentHealth < PLAYER_INITIAL_HEALTH && Math.random() < adjustedProbability) {
-            HealthPoint healthPoint = new HealthPoint(user);
-            healthPoints.add(healthPoint);
-            getRoot().getChildren().add(healthPoint);
-
-            if (healthPoint.isBoundingBoxVisible()) {
-                getRoot().getChildren().add(healthPoint.getBoundingBox());
-            }
+            HealthPoint healthPoint = new HealthPoint(user, HP_LINGER_SEC);
+            addHealthPoint(healthPoint);
         }
     }
 
     /**
-     * Handles collisions between the player and health points.
-     * Ensures the player's health is updated when health points are collected.
+     * Handles collisions between the player's character and health points.
+     * Restores health when health points are collected.
      */
     @Override
     protected void handleUserHealthPointCollisions() {
@@ -139,7 +152,7 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     /**
      * Creates and returns the level view for this level.
      *
-     * @return the {@link LevelView} instance for this level.
+     * @return the {@link LevelView} instance configured for this level.
      */
     @Override
     protected LevelView instantiateLevelView() {
@@ -147,9 +160,9 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
     }
 
     /**
-     * Checks if the player has reached the required number of kills to advance to the next level.
+     * Checks if the player has achieved the required number of kills to advance to the next level.
      *
-     * @return {@code true} if the kill target is reached, {@code false} otherwise.
+     * @return {@code true} if the player has reached the kill target, {@code false} otherwise.
      */
     private boolean userHasReachedKillTarget() {
         return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;
@@ -157,10 +170,11 @@ public class LevelTwo extends LevelParent implements EnemyVariation {
 
     /**
      * Creates an enemy plane of the specified type at the given position.
+     * The type determines the enemy's attributes such as health and projectile behavior.
      *
      * @param initialXPos the initial X-coordinate of the enemy plane.
      * @param initialYPos the initial Y-coordinate of the enemy plane.
-     * @param type        the type of enemy plane to create.
+     * @param type        the type of enemy plane to create (e.g., standard or enhanced).
      * @return the created {@link EnemyPlane}.
      */
     @Override

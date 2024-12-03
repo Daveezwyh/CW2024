@@ -2,6 +2,7 @@ package com.example.demo.level;
 
 import java.util.*;
 import com.example.demo.actor.ActiveActorDestructible;
+import com.example.demo.actor.TransientActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
 import com.example.demo.actor.UserPlane;
 import com.example.demo.util.CollisionHandler;
@@ -15,20 +16,24 @@ import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Represents a parent class for levels in the game. Provides the framework and base functionality
- * for managing level-specific elements such as user plane, enemy planes, background animation,
- * health points, and scoring.
+ * Represents the base class for all levels in the game.
+ * This class provides a framework for managing game entities such as user planes, enemy units, health points,
+ * fire deactivators, projectiles, background animations, and scoring.
  *
- * <p>Concrete subclasses must implement methods for initializing friendly units, spawning
- * enemy units, checking game-over conditions, spawning health points, and instantiating the
- * level-specific view.</p>
+ * <p>Concrete subclasses must implement key methods for level-specific behavior:</p>
+ * <ul>
+ *     <li>Initializing friendly units</li>
+ *     <li>Spawning enemy units</li>
+ *     <li>Checking game-over conditions</li>
+ *     <li>Spawning transient objects</li>
+ *     <li>Instantiating the level-specific view</li>
+ * </ul>
  */
 public abstract class LevelParent extends Observable {
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
 	private static final int MILLISECOND_DELAY = 50;
 
 	// Configurable constants
-	private final int HP_LINGER_SEC = 5;
 	private final double backgroundScrollSpeed = 2.0;
 
 	// Final instance variables
@@ -42,9 +47,10 @@ public abstract class LevelParent extends Observable {
 	private final ImageView background;
 	private final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
-	protected final List<ActiveActorDestructible> userProjectiles;
+	private final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
-	protected final List<ActiveActorDestructible> healthPoints;
+	private final List<TransientActiveActorDestructible> healthPoints;
+	private final List<TransientActiveActorDestructible> fireDeactivators;
 	protected final LevelView levelView;
 
 	// Non-final instance variables
@@ -75,6 +81,7 @@ public abstract class LevelParent extends Observable {
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
 		this.healthPoints = new ArrayList<>();
+		this.fireDeactivators = new ArrayList<>();
 
 		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
 		this.screenHeight = screenHeight;
@@ -179,9 +186,14 @@ public abstract class LevelParent extends Observable {
 	protected abstract void spawnEnemyUnits();
 
 	/**
-	 * Spawns health points in the level. Must be implemented by subclasses.
+	 * Spawns transient objects in the level, such as health points or other temporary game elements.
+	 * These objects typically have a limited lifespan and may impact gameplay by providing bonuses
+	 * or affecting other entities in the game.
+	 *
+	 * <p>This method must be implemented by subclasses to define level-specific logic for spawning
+	 * transient objects.</p>
 	 */
-	protected abstract void spawnHealthPoints();
+	protected abstract void spawnTransientObjects();
 
 	/**
 	 * Instantiates the view object for the level. Must be implemented by subclasses.
@@ -191,13 +203,25 @@ public abstract class LevelParent extends Observable {
 	protected abstract LevelView instantiateLevelView();
 
 	/**
-	 * Removes health points that have lingered on the screen for longer than the configured duration.
+	 * Removes transient objects from the level that have exceeded their lifespan.
+	 * This method checks the current time against the expiration time of each transient object
+	 * (e.g., health points and fire deactivators) and destroys those that have expired.
+	 *
+	 * <p>Transient objects typically have a limited duration during which they remain active in the level.
+	 * Once they expire, they are removed to ensure proper game flow and performance.</p>
 	 */
-	protected void destroyExpiredHealthPoints() {
+	protected void destroyExpiredTransientObjects() {
 		long currentTimeSec = System.currentTimeMillis() / 1000;
+
 		healthPoints.forEach(healthPoint -> {
-			if ((currentTimeSec - healthPoint.getCreatedTimeStamp()) > HP_LINGER_SEC) {
+			if (healthPoint.isExpired(currentTimeSec)) {
 				healthPoint.destroy();
+			}
+		});
+
+		fireDeactivators.forEach(fireDeactivator -> {
+			if (fireDeactivator.isExpired(currentTimeSec)) {
+				fireDeactivator.destroy();
 			}
 		});
 	}
@@ -294,12 +318,35 @@ public abstract class LevelParent extends Observable {
 	}
 
 	/**
-	 * Retrieves the list of health points present in the level.
+	 * Retrieves the list of projectiles fired by the user's plane.
+	 * These projectiles are tracked for collision detection and scene updates.
 	 *
-	 * @return a list of {@link ActiveActorDestructible} objects representing health points.
+	 * @return a list of {@link ActiveActorDestructible} objects representing the user's projectiles.
 	 */
-	protected List<ActiveActorDestructible> getHealthPoints() {
+	protected List<ActiveActorDestructible> getUserProjectiles() {
+		return userProjectiles;
+	}
+
+	/**
+	 * Retrieves the list of health points currently present in the level.
+	 * Health points are transient objects that can be collected by the player
+	 * to restore health and are tracked for scene updates and collision detection.
+	 *
+	 * @return a list of {@link TransientActiveActorDestructible} objects representing health points in the level.
+	 */
+	protected List<TransientActiveActorDestructible> getHealthPoints() {
 		return healthPoints;
+	}
+
+	/**
+	 * Retrieves the list of fire deactivators currently present in the level.
+	 * Fire deactivators are transient objects that temporarily disable certain abilities
+	 * (e.g., the boss's ability to fire projectiles) and are tracked for scene updates and collision detection.
+	 *
+	 * @return a list of {@link TransientActiveActorDestructible} objects representing fire deactivators in the level.
+	 */
+	protected List<TransientActiveActorDestructible> getFireDeactivators() {
+		return fireDeactivators;
 	}
 
 	/**
@@ -312,6 +359,40 @@ public abstract class LevelParent extends Observable {
 		root.getChildren().add(enemy);
 		if (enemy.isBoundingBoxVisible()) {
 			root.getChildren().add(enemy.getBoundingBox());
+		}
+	}
+
+	/**
+	 * Adds a health point to the level, making it active in the game.
+	 * The health point is added to the list of tracked health points and
+	 * attached to the scene graph for rendering. If the health point has a visible
+	 * bounding box, it is also added to the scene graph.
+	 *
+	 * @param healthPoint the {@link TransientActiveActorDestructible} object representing the health point to add.
+	 */
+	protected void addHealthPoint(TransientActiveActorDestructible healthPoint) {
+		healthPoints.add(healthPoint);
+		root.getChildren().add(healthPoint);
+
+		if (healthPoint.isBoundingBoxVisible()) {
+			root.getChildren().add(healthPoint.getBoundingBox());
+		}
+	}
+
+	/**
+	 * Adds a fire deactivator to the level, making it active in the game.
+	 * The fire deactivator is added to the list of tracked fire deactivators and
+	 * attached to the scene graph for rendering. If the fire deactivator has a visible
+	 * bounding box, it is also added to the scene graph.
+	 *
+	 * @param fireDeactivator the {@link TransientActiveActorDestructible} object representing the fire deactivator to add.
+	 */
+	protected void addFireDeactivator(TransientActiveActorDestructible fireDeactivator) {
+		fireDeactivators.add(fireDeactivator);
+		root.getChildren().add(fireDeactivator);
+
+		if (fireDeactivator.isBoundingBoxVisible()) {
+			root.getChildren().add(fireDeactivator.getBoundingBox());
 		}
 	}
 
@@ -348,14 +429,14 @@ public abstract class LevelParent extends Observable {
 	 */
 	private void updateScene() {
 		spawnEnemyUnits();
-		spawnHealthPoints();
+		spawnTransientObjects();
 		updateActors();
 		generateEnemyFire();
 		updateNumberOfEnemies();
 		handleEnemyPenetration();
 		handleGenericCollisions();
 		handleUserHealthPointCollisions();
-		destroyExpiredHealthPoints();
+		destroyExpiredTransientObjects();
 		removeAllDestroyedActors();
 		removeOffScreenProjectiles();
 		updateLevelView();
@@ -472,15 +553,19 @@ public abstract class LevelParent extends Observable {
 		removeDestroyedActors(userProjectiles);
 		removeDestroyedActors(enemyProjectiles);
 		removeDestroyedActors(healthPoints);
+		removeDestroyedActors(fireDeactivators);
 	}
 
 	/**
-	 * Removes actors that are marked as destroyed or should be removed from the scene and their tracking list.
+	 * Removes destroyed or flagged actors from the provided list and the scene graph.
+	 * Actors are considered for removal if they are marked as destroyed or flagged for removal.
+	 * If the actor is an enemy unit and has been destroyed, the player's kill count is incremented.
+	 * The method ensures that both the actor and its bounding box are removed from the scene graph.
 	 *
-	 * @param actors the list of actors to process.
+	 * @param actors the list of {@link ActiveActorDestructible} objects to process for removal.
 	 */
-	private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
-		List<ActiveActorDestructible> destroyedActors = actors.stream()
+	private void removeDestroyedActors(List<? extends ActiveActorDestructible> actors) {
+		List<? extends ActiveActorDestructible> destroyedActors = actors.stream()
 				.filter(actor -> actor.isDestroyed() || actor.getShouldRemove())
 				.toList();
 		for (ActiveActorDestructible actor : destroyedActors) {

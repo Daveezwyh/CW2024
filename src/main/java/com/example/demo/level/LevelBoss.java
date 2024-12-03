@@ -1,23 +1,26 @@
 package com.example.demo.level;
 
 import com.example.demo.actor.Boss;
+import com.example.demo.actor.FireDeactivator;
 import com.example.demo.actor.UserPlane;
 import com.example.demo.util.CollisionHandler;
 
 /**
- * Represents the boss level in the game. This level includes a boss fight
- * with specific behaviors and updates for the level view and collisions.
+ * Represents the boss level in the game. This level features a challenging boss fight,
+ * specific behaviors for the boss and user interactions, and updates to the level view.
+ * It includes mechanisms for spawning enemies, handling collisions, and managing the game's outcome.
  */
 public class LevelBoss extends LevelParent {
 
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
-
+	private final double FIREDEAC_SPAWN_PROBABILITY = 0.005;
+	private final int FIREDEAC_LINGER_SEC = 5;
 	private final Boss boss;
 	private LevelViewLevelBoss levelView;
 
 	/**
-	 * Constructs the boss level with the specified screen dimensions.
+	 * Constructs a new boss level with the specified screen dimensions.
 	 *
 	 * @param screenHeight the height of the game screen.
 	 * @param screenWidth  the width of the game screen.
@@ -28,8 +31,8 @@ public class LevelBoss extends LevelParent {
 	}
 
 	/**
-	 * Initializes the friendly units (e.g., user plane) in the level.
-	 * Adds the user plane and its bounding box to the scene if visible.
+	 * Initializes the friendly units in the level, such as the user's plane.
+	 * Adds the user plane and its bounding box to the game scene if the bounding box is visible.
 	 */
 	@Override
 	protected void initializeFriendlyUnits() {
@@ -41,7 +44,8 @@ public class LevelBoss extends LevelParent {
 	}
 
 	/**
-	 * Spawns the enemy units, ensuring the boss is added when no enemies are present.
+	 * Spawns enemy units in the level.
+	 * Ensures the boss is added when there are no enemy units currently present.
 	 */
 	@Override
 	protected void spawnEnemyUnits() {
@@ -51,8 +55,9 @@ public class LevelBoss extends LevelParent {
 	}
 
 	/**
-	 * Checks if the game is over, either by the user plane being destroyed
-	 * or the boss being defeated.
+	 * Checks if the game is over.
+	 * The game ends if the user's plane is destroyed (resulting in a loss)
+	 * or if the boss is defeated (resulting in a win).
 	 */
 	@Override
 	protected void checkIfGameOver() {
@@ -64,20 +69,45 @@ public class LevelBoss extends LevelParent {
 	}
 
 	/**
-	 * Handles scoreable collisions, such as user projectiles hitting the boss.
-	 * Updates the game score based on collision outcomes.
+	 * Handles scoreable collisions in the level, such as user projectiles hitting the boss.
+	 * Updates the game score based on the outcomes of the collisions.
 	 */
 	@Override
 	protected void handleScoreableCollisions() {
-		int scoreIncrement = CollisionHandler.handleUserProjectileBossCollisions(getUser(), userProjectiles, boss);
+		int scoreIncrement = CollisionHandler.handleUserProjectileBossCollisions(getUser(), getUserProjectiles(), boss);
 		gameScore.increaseScoreBy(scoreIncrement);
+
+		handleBossEffectCollisions();
 	}
 
 	/**
-	 * Spawns health points in the level. No implementation for this level.
+	 * Spawns transient objects in the level, such as the fire deactivator.
 	 */
 	@Override
-	protected void spawnHealthPoints() {
+	protected void spawnTransientObjects() {
+		spawnFireDeactivator();
+	}
+
+	/**
+	 * Handles collisions between the user and boss-specific effects, such as the fire deactivator.
+	 */
+	private void handleBossEffectCollisions() {
+		CollisionHandler.handleUserBossFireDeactivatorCollisions(getUser(), boss, getFireDeactivators());
+	}
+
+	/**
+	 * Spawns a fire deactivator if the boss's fire is not already deactivated,
+	 * no fire deactivators are present, and a random probability check passes.
+	 */
+	private void spawnFireDeactivator() {
+		if (
+				!boss.getIsFireDeactivated() &&
+						getFireDeactivators().isEmpty() &&
+						Math.random() < FIREDEAC_SPAWN_PROBABILITY
+		) {
+			FireDeactivator fireDeactivator = new FireDeactivator(getUser(), FIREDEAC_LINGER_SEC);
+			addFireDeactivator(fireDeactivator);
+		}
 	}
 
 	/**
@@ -92,7 +122,8 @@ public class LevelBoss extends LevelParent {
 	}
 
 	/**
-	 * Updates the level view, including the boss's health and shield status.
+	 * Updates the level view with information specific to the boss level,
+	 * such as the boss's health, shield status, and fire deactivation state.
 	 */
 	@Override
 	protected void updateLevelView() {
@@ -103,12 +134,19 @@ public class LevelBoss extends LevelParent {
 		} else {
 			levelView.hideShield();
 		}
+		if (boss.getIsFireDeactivated()) {
+			levelView.showNoFire();
+		} else {
+			levelView.hideNoFire();
+		}
 	}
 
 	/**
-	 * Animates the background of the level. No implementation for this level.
+	 * Animates the background of the level.
+	 * This method currently has no implementation for the boss level.
 	 */
 	@Override
 	protected void animateBackground() {
+		// No background animation for the boss level.
 	}
 }

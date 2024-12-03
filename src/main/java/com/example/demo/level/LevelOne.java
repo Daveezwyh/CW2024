@@ -80,11 +80,12 @@ public class LevelOne extends LevelParent {
 	}
 
 	/**
-	 * Spawns health points in the level. This level does not include health points.
+	 * This level does not include health points.
 	 */
 	@Override
-	protected void spawnHealthPoints() {
+	protected void spawnTransientObjects() {
 		// No health points in this level.
+		return;
 	}
 
 	/**

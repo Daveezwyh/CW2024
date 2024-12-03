@@ -5,17 +5,19 @@ import com.example.demo.util.CollisionHandler;
 
 /**
  * Represents the third level of the game.
- * Introduces more challenging enemy configurations and health point mechanics.
+ * This level increases the challenge by introducing more frequent enemy spawns
+ * and dynamic health point mechanics. The player must survive and reach a specified
+ * kill target to advance to the next level.
  */
 public class LevelThree extends LevelParent {
 
     /**
-     * Path to the background image for the level.
+     * Path to the background image used in this level.
      */
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
 
     /**
-     * Total number of enemies allowed in the level at any time.
+     * Maximum number of enemies allowed to exist simultaneously in the level.
      */
     private static final int TOTAL_ENEMIES = 4;
 
@@ -25,12 +27,12 @@ public class LevelThree extends LevelParent {
     private static final int KILLS_TO_ADVANCE = 30;
 
     /**
-     * Probability of spawning an enemy on each frame.
+     * Probability of spawning a new enemy on each frame.
      */
-    private static final double ENEMY_SPAWN_PROBABILITY = .20;
+    private static final double ENEMY_SPAWN_PROBABILITY = 0.20;
 
     /**
-     * Initial health of the player's character.
+     * Initial health of the player's character at the start of the level.
      */
     private static final int PLAYER_INITIAL_HEALTH = 5;
 
@@ -40,15 +42,20 @@ public class LevelThree extends LevelParent {
     private static final double HP_SPAWN_PROBABILITY = 0.01;
 
     /**
-     * Level selector to manage navigation to the next level.
+     * Duration (in seconds) for which a health point remains active after spawning.
+     */
+    private final int HP_LINGER_SEC = 5;
+
+    /**
+     * Manages level transitions for navigating to the next level.
      */
     private final LevelSelector levelSelector;
 
     /**
-     * Constructs the third level with the given screen dimensions.
+     * Constructs the third level with the specified screen dimensions.
      *
-     * @param screenHeight the height of the screen.
-     * @param screenWidth  the width of the screen.
+     * @param screenHeight the height of the game screen.
+     * @param screenWidth  the width of the game screen.
      */
     public LevelThree(double screenHeight, double screenWidth) {
         super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
@@ -56,7 +63,9 @@ public class LevelThree extends LevelParent {
     }
 
     /**
-     * Checks whether the game is over due to the player's destruction or if the kill target has been reached.
+     * Checks whether the game is over.
+     * The game ends if the player's character is destroyed, resulting in a loss,
+     * or if the player reaches the required kill target, advancing to the next level.
      */
     @Override
     protected void checkIfGameOver() {
@@ -69,6 +78,7 @@ public class LevelThree extends LevelParent {
 
     /**
      * Initializes the player's character and adds it to the game scene.
+     * If the player's bounding box is visible, it is also added to the scene.
      */
     @Override
     protected void initializeFriendlyUnits() {
@@ -81,7 +91,8 @@ public class LevelThree extends LevelParent {
     }
 
     /**
-     * Spawns enemy units based on the current number of enemies and a spawn probability.
+     * Spawns enemy units based on the current number of enemies and a random spawn probability.
+     * Ensures the total number of enemies does not exceed the maximum allowed.
      */
     @Override
     protected void spawnEnemyUnits() {
@@ -102,28 +113,32 @@ public class LevelThree extends LevelParent {
     }
 
     /**
-     * Spawns health points based on the player's current health and a dynamic spawn probability.
+     * Spawns transient objects in the level, specifically health points.
+     * Adjusts the spawn probability dynamically based on the player's current health.
      */
     @Override
-    protected void spawnHealthPoints() {
+    protected void spawnTransientObjects() {
+        spawnHealthPoints();
+    }
+
+    /**
+     * Spawns health points based on the player's current health and a dynamic spawn probability.
+     * Health points are more likely to spawn when the player's health is lower.
+     */
+    private void spawnHealthPoints() {
         UserPlane user = getUser();
         int currentHealth = user.getHealth();
         double adjustedProbability = (double) (PLAYER_INITIAL_HEALTH - currentHealth) / PLAYER_INITIAL_HEALTH * HP_SPAWN_PROBABILITY;
 
         if (currentHealth < PLAYER_INITIAL_HEALTH && Math.random() < adjustedProbability) {
-            HealthPoint healthPoint = new HealthPoint(user);
-            healthPoints.add(healthPoint);
-            getRoot().getChildren().add(healthPoint);
-
-            if (healthPoint.isBoundingBoxVisible()) {
-                getRoot().getChildren().add(healthPoint.getBoundingBox());
-            }
+            HealthPoint healthPoint = new HealthPoint(user, HP_LINGER_SEC);
+            addHealthPoint(healthPoint);
         }
     }
 
     /**
-     * Handles collisions between the player and health points.
-     * Ensures the player's health is updated when health points are collected.
+     * Handles collisions between the player's character and health points.
+     * Restores health when health points are collected.
      */
     @Override
     protected void handleUserHealthPointCollisions() {
@@ -137,7 +152,7 @@ public class LevelThree extends LevelParent {
     /**
      * Creates and returns the level view for this level.
      *
-     * @return the {@link LevelView} instance for this level.
+     * @return the {@link LevelView} instance configured for this level.
      */
     @Override
     protected LevelView instantiateLevelView() {
@@ -145,9 +160,9 @@ public class LevelThree extends LevelParent {
     }
 
     /**
-     * Checks if the player has reached the required number of kills to advance to the next level.
+     * Checks if the player has achieved the required number of kills to advance to the next level.
      *
-     * @return {@code true} if the kill target is reached, {@code false} otherwise.
+     * @return {@code true} if the player has reached the kill target, {@code false} otherwise.
      */
     private boolean userHasReachedKillTarget() {
         return getUser().getNumberOfKills() >= KILLS_TO_ADVANCE;

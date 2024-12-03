@@ -4,60 +4,56 @@ import java.util.Random;
 
 /**
  * Represents a health point object in the game.
- * The health point appears randomly within specified bounds and can be collected to restore health.
+ * The health point is a collectible item that appears randomly within a defined area
+ * around the user's plane. When collected, it restores health to the user.
+ * The health point has a limited lifespan and is destroyed after a set duration or upon taking damage.
  */
-public class HealthPoint extends ActiveActorDestructible {
+public class HealthPoint extends TransientActiveActorDestructible {
 
     private static final String IMAGE_NAME = "heart.png";
     private static final int IMAGE_HEIGHT = 30;
     private static final int Y_UPPER_OFFSET = 100;
     private static final int X_UPPER_OFFSET = 300;
-    private final long createdTimeStamp;
 
     /**
-     * Constructs a HealthPoint instance at a random position within specified bounds.
+     * Constructs a HealthPoint instance with a random position within the area around the user's plane.
+     * The position is calculated using the bounds of the user's plane and offsets to ensure
+     * variety in placement. The health point will linger for the specified duration.
      *
-     * @param userPlane the user plane to determine bounds for the random position.
+     * @param userPlane       the user's plane, used to determine bounds for the random position.
+     * @param lingerTimeSecond the duration in seconds for which the health point remains active.
      */
-    public HealthPoint(UserPlane userPlane) {
+    public HealthPoint(UserPlane userPlane, long lingerTimeSecond) {
         super(
                 IMAGE_NAME,
                 IMAGE_HEIGHT,
                 getRandomPosition(userPlane.getXLowerBound(), userPlane.getXUpperBound() + X_UPPER_OFFSET),
-                getRandomPosition(userPlane.getYLowerBound(), userPlane.getYUpperBound() + Y_UPPER_OFFSET)
+                getRandomPosition(userPlane.getYLowerBound(), userPlane.getYUpperBound() + Y_UPPER_OFFSET),
+                lingerTimeSecond
         );
-        createdTimeStamp = System.currentTimeMillis() / 1000;
-    }
-
-    /**
-     * Calculates a random position within the given bounds.
-     *
-     * @param lowerBound the lower bound for the random position.
-     * @param upperBound the upper bound for the random position.
-     * @return a random position within the specified bounds.
-     */
-    private static double getRandomPosition(double lowerBound, double upperBound) {
-        Random random = new Random();
-        return lowerBound + (random.nextDouble() * (upperBound - lowerBound));
     }
 
     /**
      * Updates the position of the health point.
-     * No movement is applied to HealthPoint, so this method is empty.
+     * The health point remains stationary, so this method does not modify its position.
      */
     @Override
-    public void updatePosition() {}
+    public void updatePosition() {
+        // No movement logic required for HealthPoint.
+    }
 
     /**
-     * Updates the actor logic for the health point.
-     * This method is empty since HealthPoint does not have additional behavior.
+     * Updates the behavior of the health point.
+     * This method currently has no additional behavior beyond its base class functionality.
      */
     @Override
-    public void updateActor() {}
+    public void updateActor() {
+        // No additional logic required for HealthPoint.
+    }
 
     /**
-     * Handles the damage taken by the health point.
-     * The health point is destroyed upon taking damage.
+     * Handles damage taken by the health point.
+     * When a health point takes damage, it is destroyed and removed from the game.
      */
     @Override
     public void takeDamage() {
@@ -66,18 +62,10 @@ public class HealthPoint extends ActiveActorDestructible {
 
     /**
      * Repairs the health point.
-     * No implementation since HealthPoint cannot repair itself.
+     * This method has no implementation since health points cannot be repaired.
      */
     @Override
-    public void repairDamage() {}
-
-    /**
-     * Returns the creation timestamp of the health point.
-     *
-     * @return the creation timestamp in seconds since the epoch.
-     */
-    @Override
-    public long getCreatedTimeStamp() {
-        return createdTimeStamp;
+    public void repairDamage() {
+        // HealthPoint does not support repair functionality.
     }
 }
