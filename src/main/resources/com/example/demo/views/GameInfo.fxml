@@ -53,9 +53,22 @@
 
                <!-- Restore HP Section -->
                <Text fx:id="sectionHeader" text="Restore HP:" wrappingWidth="827.0" />
-               <Text fx:id="indentedText" text="- HP heart will spawn in random position" wrappingWidth="827.0" />
-               <Text fx:id="indentedText" text="- Hit the HP heart to restore your health" wrappingWidth="827.0" />
-               <Text fx:id="indentedText" text="- The lower your health the higher the chance HP will spawn" wrappingWidth="827.0">
+               <Text fx:id="indentedText" text="- HP heart will spawn in random position." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- HP heart will remain for 5 seconds before disappear." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Hit the HP heart to restore your health." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- The lower your health the higher the chance HP heart will spawn." wrappingWidth="827.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" />
+                  </VBox.margin>
+               </Text>
+
+               <!-- Deactivate Boss fire -->
+               <Text fx:id="sectionHeader" text="Deactivate Boss Fire:" wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Boss Fire Deactivator is only available in Level Boss." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Boss Fire Deactivator will spawn in random position." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Boss Fire Deactivator will remain for 5 seconds before disappear." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- Hit the Boss Fire Deactivator to deny Boss firing ability." wrappingWidth="827.0" />
+               <Text fx:id="indentedText" text="- This effect wear off after some time and Boss is able to fire again." wrappingWidth="827.0">
                   <VBox.margin>
                      <Insets bottom="10.0" />
                   </VBox.margin>
