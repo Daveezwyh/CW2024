@@ -5,6 +5,7 @@ import com.example.demo.actor.ActiveActorDestructible;
 import com.example.demo.actor.TransientActiveActorDestructible;
 import com.example.demo.actor.FighterPlane;
 import com.example.demo.actor.UserPlane;
+import com.example.demo.singleton.GameLoop;
 import com.example.demo.util.CollisionHandler;
 import com.example.demo.util.GameScore;
 import javafx.animation.*;
@@ -40,8 +41,9 @@ public abstract class LevelParent extends Observable {
 	private final double screenHeight;
 	private final double screenWidth;
 	private final double enemyMaximumYPosition;
+
 	private final Group root;
-	private final Timeline timeline;
+	private final GameLoop gameLoop;
 	private final UserPlane user;
 	private final Scene scene;
 	private final ImageView background;
@@ -56,10 +58,9 @@ public abstract class LevelParent extends Observable {
 	// Non-final instance variables
 	protected GameScore gameScore;
 	private int currentNumberOfEnemies;
+	private double backgroundPosition = 0;
 	private boolean isFiring = false;
 	private Timeline firingTimeline;
-	private double backgroundPosition = 0;
-	private boolean isPaused = false;
 
 	/**
 	 * Constructs a new LevelParent instance with the specified configuration.
@@ -74,7 +75,7 @@ public abstract class LevelParent extends Observable {
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
-		this.timeline = new Timeline();
+		this.gameLoop = GameLoop.getInstance();
 		this.user = new UserPlane(playerInitialHealth);
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
@@ -89,7 +90,8 @@ public abstract class LevelParent extends Observable {
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
 		this.currentNumberOfEnemies = 0;
-		initializeTimeline();
+
+		gameLoop.initialize(Duration.millis(MILLISECOND_DELAY), this::updateScene);
 		friendlyUnits.add(user);
 	}
 
@@ -112,14 +114,14 @@ public abstract class LevelParent extends Observable {
 	 */
 	public void startGame() {
 		background.requestFocus();
-		timeline.play();
+		gameLoop.start();
 	}
 
 	/**
 	 * Stops the game by halting the timeline animation and unbinding any key listeners.
 	 */
 	public void stopGame() {
-		timeline.stop();
+		gameLoop.stop();
 		if (firingTimeline != null) {
 			firingTimeline.stop();
 		}
@@ -130,20 +132,15 @@ public abstract class LevelParent extends Observable {
 	 * Toggles the game's paused state. If the game is running, it pauses the timeline and displays the pause overlay.
 	 * If the game is paused, it resumes the timeline and hides the pause overlay.
 	 */
-	public void pauseGame() {
-		if (timeline.getStatus() == Animation.Status.RUNNING) {
-			isPaused = true;
-			timeline.pause();
+	public void togglePauseGame() {
+		if (gameLoop.isRunning()) {
+			gameLoop.pause();
 			if (firingTimeline != null && firingTimeline.getStatus() == Animation.Status.RUNNING) {
 				firingTimeline.pause();
 			}
 			levelView.showPauseOverlay();
 		} else {
-			isPaused = false;
-			timeline.play();
-			if (firingTimeline != null) {
-				firingTimeline.play();
-			}
+			gameLoop.resume();
 			levelView.hidePauseOverlay();
 		}
 	}
@@ -154,6 +151,7 @@ public abstract class LevelParent extends Observable {
 	 * @param levelName the name of the next level to transition to.
 	 */
 	public void goToNextLevel(String levelName) {
+		stopGame();
 		setChanged();
 		notifyObservers(new LevelNotification(
 				levelName,
@@ -445,15 +443,6 @@ public abstract class LevelParent extends Observable {
 	}
 
 	/**
-	 * Initializes the timeline for the game loop. The timeline runs indefinitely and updates the scene at a fixed interval.
-	 */
-	private void initializeTimeline() {
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> updateScene());
-		timeline.getKeyFrames().add(gameLoop);
-	}
-
-	/**
 	 * Sets up the level's background, including key press and release handlers.
 	 * Adds a secondary background image to simulate a scrolling effect.
 	 */
@@ -654,9 +643,9 @@ public abstract class LevelParent extends Observable {
 	 * @param e the {@link KeyEvent} representing the key press.
 	 */
 	private void handleKeyPress(KeyEvent e) {
-		if (isPaused) {
+		if (gameLoop.isPaused()) {
 			if (e.getCode() == KeyCode.ESCAPE) {
-				pauseGame();
+				togglePauseGame();
 			}
 			return;
 		}
@@ -666,7 +655,7 @@ public abstract class LevelParent extends Observable {
 		if (kc == KeyCode.LEFT) user.moveLeft();
 		if (kc == KeyCode.RIGHT) user.moveRight();
 		if (kc == KeyCode.SPACE && !isFiring) startFiring();
-		if (kc == KeyCode.ESCAPE) pauseGame();
+		if (kc == KeyCode.ESCAPE) togglePauseGame();
 	}
 
 	/**
@@ -675,7 +664,7 @@ public abstract class LevelParent extends Observable {
 	 * @param e the {@link KeyEvent} representing the key release.
 	 */
 	private void handleKeyRelease(KeyEvent e) {
-		if (isPaused) return;
+		if (gameLoop.isPaused()) return;
 		KeyCode kc = e.getCode();
 		if (kc == KeyCode.UP || kc == KeyCode.DOWN || kc == KeyCode.LEFT || kc == KeyCode.RIGHT) {
 			user.stop();
